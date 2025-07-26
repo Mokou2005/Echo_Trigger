@@ -1,3 +1,4 @@
+URP Studio Livery Creator.unitypackage
 .vs
 Library
 Logs
@@ -8,7 +9,6 @@ UserSettings
 *.csproj
 *.sln
 ActionSTG
-Studio Livery Creator
-
-
+Model
+Scenes
 
