@@ -9,13 +9,10 @@ public class EnemyShot : MonoBehaviour
     [Header("’e‚Ì‘¬‚³")]
     public float m_BulletSpeed;
     public AudioClip m_sound;
-    private int count;
 
-    private void Update()
+
+    public void Shot()
     {
-        count++;
-        if (count % 60 == 0)
-        {
             //eŒû‚Ìİ’èieŒû‚©‚ç”­Ëj
             GameObject Bullet = Instantiate(m_bulletPrefab, m_Gun.position, m_Gun.rotation);
             //ã‚ÌBullet‚ÉRigidbody‚ğŠi”[i—Í‚ğ‰Á‚¦‚é‚È‚Çj
@@ -26,7 +23,7 @@ public class EnemyShot : MonoBehaviour
             AudioSource.PlayClipAtPoint(m_sound, transform.position);
             //ŒÜ•bŒãíœ
             Destroy(Bullet, 5.0f);
-        }
+
 
     }
 }

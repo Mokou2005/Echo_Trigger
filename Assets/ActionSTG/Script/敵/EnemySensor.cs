@@ -7,6 +7,16 @@ public class EnemySensor : MonoBehaviour
     public float m_viewDistance = 10f;
     //視野角（左右も角度）
     public float m_viewAngle = 60f;
+    // クールタイムの長さ
+    [Header("弾のクールタイム")]
+    public float m_ShotCooldown;
+    // 次に撃てる長さ
+    private float m_NextShotTime = 0f;　
+    private EnemyShot m_EnamyShot;
+    private void Start()
+    {
+        m_EnamyShot = GetComponent<EnemyShot>();
+    }
 
     private void Update()
     {
@@ -24,9 +34,15 @@ public class EnemySensor : MonoBehaviour
             float threshold = Mathf.Cos(m_viewAngle * 0.5f * Mathf.Deg2Rad);
             if (dot >= threshold)
             {
-          
                 Debug.Log("攻撃状態に入る！");
-          
+                //m_EnamyShotがあるかとm_NextShotTimeより大きかったら
+                if (m_EnamyShot != null && Time.time >= m_NextShotTime)
+                {
+                    m_EnamyShot.Shot();
+                    //加算されていく
+                    m_NextShotTime = Time.time + m_ShotCooldown; // 1秒後に次の発射許可
+                }
+
             }
             else
             {

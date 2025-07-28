@@ -16,11 +16,11 @@ public class DamegeSystem : MonoBehaviour
         if (m_Parameta)
         {
             
-          
+
             //パラメータを持っているか
             if (other.gameObject.GetComponent<Parameta>())
             {
-                
+               
                 //パラメータを持っていて同じチームではないか
                 if (other.gameObject.GetComponent<Parameta>().m_Team != m_Parameta.m_Team)
                 {
