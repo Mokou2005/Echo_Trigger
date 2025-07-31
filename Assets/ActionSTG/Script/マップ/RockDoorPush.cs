@@ -1,7 +1,6 @@
-using Unity.Android.Gradle;
 using UnityEngine;
 
-public class RockDoorPushManual : MonoBehaviour
+public class RockDoorPush : MonoBehaviour
 {
     [Header("鍵の名前")]
     public string m_KeyName;
@@ -9,51 +8,47 @@ public class RockDoorPushManual : MonoBehaviour
     public Animator m_PushAnimator;
     [Header("ドアのアニメーター")]
     public Animator m_OpenAnimator;
-    [Header("Keyを持っているときの画像")]
-    public GameObject m_KeyOnImage;
-    [Header("Keyを持ってないときの画像")]
-    public GameObject m_KeyNoImage;
+    [Header("鍵がない場合の画像")]
+    public GameObject m_NoImage;
+    [Header("鍵がある場合の画像")]
+    public GameObject m_OnImage;
     //ドアの開く音
     public AudioClip m_Doorsound;
     private AudioSource m_audioSource;
     //プレイヤーがドアをおしたか
     private bool pushPlayed = false;
-    //エリア
+    //エリア（トリガー）
     private bool isInArea = false;
-    //アイテム管理参照
+    //アイテム管理を参照
     private ItemManager m_itemManager;
 
     private void Start()
     {
         //開始時は非表示
-        m_KeyNoImage.SetActive(false);
-        m_KeyOnImage.SetActive(false);
+        m_NoImage.SetActive(false);
+        m_OnImage.SetActive(false);
         m_audioSource = GetComponent<AudioSource>();
 
     }
 
     private void Update()
     {
-
-
         // 入力は毎フレームチェック
-        if (isInArea && Input.GetKeyDown(KeyCode.E))
+        if (isInArea && Input.GetKeyDown(KeyCode.E) && !pushPlayed)
         {
-            //keyは持っているか
+            //Keyは持っているか
             if (m_itemManager.HasItem(m_KeyName))
             {
-                // 開閉切り替え
-                pushPlayed = !pushPlayed;
-                // 音を再生
+                //開く音
                 m_audioSource.PlayOneShot(m_Doorsound);
-                // アニメーション状態切り替え
-                OC_DoorAnimaier(pushPlayed);
-                // キャラ押しアニメ
+                pushPlayed = true;
+                //ドアアニメーション（オン）
+                OC_DoorAnimaier(true);
+                //キャラクタアニメーション
                 m_PushAnimator.SetBool("Push", true);
-                // キャラ押し終了
+                // 0.5秒後にPushを戻す
                 Invoke(nameof(ResetPush), 0.5f);
-                // UI非表示
-                m_KeyOnImage.SetActive(false);
+                m_OnImage.SetActive(false);
             }
         }
     }
@@ -61,30 +56,27 @@ public class RockDoorPushManual : MonoBehaviour
     private void ResetPush()
     {
         m_PushAnimator.SetBool("Push", false);
-
-
+        pushPlayed = false;
     }
     //エリアに入ったら
     private void OnTriggerEnter(Collider other)
     {
-
         //パラメータを持っている人だけ
         if (other.GetComponent<Parameta>())
         {
-            m_itemManager = other.GetComponent<ItemManager>();
-            //keyは持っているか
+            m_itemManager=other.GetComponent<ItemManager>();
+            //Keyをもっていたら
             if (m_itemManager.HasItem(m_KeyName))
             {
                 //エリア検知
                 isInArea = true;
                 //画像表示
-                m_KeyOnImage.SetActive(true);
+                m_OnImage.SetActive(true);
             }
-            //Keyを持っていなければ
             else
             {
                 //画像表示
-                m_KeyNoImage.SetActive(true);
+                m_NoImage.SetActive(true);
             }
         }
     }
@@ -94,21 +86,21 @@ public class RockDoorPushManual : MonoBehaviour
         //パラメータを持っている人だけ
         if (other.GetComponent<Parameta>())
         {
-            //keyは持っているか
+            //Keyをもっているか
             if (m_itemManager.HasItem(m_KeyName))
             {
                 //エリア非検知
                 isInArea = false;
                 //画像非表示
-                m_KeyOnImage.SetActive(false);
+                m_OnImage.SetActive(false);
+                //ドアアニメーション（オフ）
+                OC_DoorAnimaier(false);
             }
-            //Keyを持っていなければ
             else
             {
                 //画像非表示
-                m_KeyNoImage.SetActive(false);
+                m_NoImage.SetActive(false);
             }
-
         }
     }
 
