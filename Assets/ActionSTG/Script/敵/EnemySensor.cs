@@ -1,8 +1,11 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemySensor : MonoBehaviour
 {
     public Transform m_Player;
+    [Header("移動の速さ")]
+    public float m_speed;
     //感知の距離
     public float m_viewDistance = 10f;
     //視野角（左右も角度）
@@ -13,9 +16,12 @@ public class EnemySensor : MonoBehaviour
     // 次に撃てる長さ
     private float m_NextShotTime = 0f;　
     private EnemyShot m_EnamyShot;
+    private NavMeshAgent m_navmeshagent;
     private void Start()
     {
         m_EnamyShot = GetComponent<EnemyShot>();
+        m_navmeshagent = GetComponent<NavMeshAgent>();
+        m_navmeshagent.speed = m_speed;
     }
 
     private void Update()
@@ -35,6 +41,8 @@ public class EnemySensor : MonoBehaviour
             if (dot >= threshold)
             {
                 Debug.Log("攻撃状態に入る！");
+                //playerに追跡
+                m_navmeshagent.SetDestination(m_Player.position);
                 //m_EnamyShotがあるかとm_NextShotTimeより大きかったら
                 if (m_EnamyShot != null && Time.time >= m_NextShotTime)
                 {
