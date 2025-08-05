@@ -1,24 +1,27 @@
 using UnityEngine;
 
-public class EnemyShot : MonoBehaviour
+public class AssaultRifle : MonoBehaviour
 {
-    [Header("プレイヤーが持つ銃")]
+    [Header("銃口の位置")]
     public Transform m_Gun;
     [Header("弾複製（プレハブ）")]
     public GameObject m_bulletPrefab;
     [Header("弾の速さ")]
     public float m_BulletSpeed;
     public AudioClip m_sound;
+    [Header("この銃を使う敵本体")]
+    public GameObject m_Owner;
     //Parameta参照
     private Parameta m_Parameta;
 
     private void Start()
     {
-        m_Parameta = GetComponent<Parameta>();
+        m_Parameta = m_Owner.GetComponent<Parameta>();
     }
     public void Shot()
     {
-        if (m_Parameta.m_Hp> 0) { 
+        if (m_Parameta.m_Hp > 0)
+        {
             //銃口の設定（銃口から発射）
             GameObject Bullet = Instantiate(m_bulletPrefab, m_Gun.position, m_Gun.rotation);
             Bullet.GetComponent<DamegeSystem>().m_Parameta = m_Parameta;

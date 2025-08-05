@@ -13,13 +13,13 @@ public class EnemySensor : MonoBehaviour
     // クールタイムの長さ
     [Header("弾のクールタイム")]
     public float m_ShotCooldown;
+    [Header("敵が持つ銃")]
+    public GameObject m_Gun;
     // 次に撃てる長さ
     private float m_NextShotTime = 0f;　
-    private EnemyShot m_EnamyShot;
     private NavMeshAgent m_navmeshagent;
     private void Start()
     {
-        m_EnamyShot = GetComponent<EnemyShot>();
         m_navmeshagent = GetComponent<NavMeshAgent>();
         m_navmeshagent.speed = m_speed;
     }
@@ -43,12 +43,15 @@ public class EnemySensor : MonoBehaviour
                 Debug.Log("攻撃状態に入る！");
                 //playerに追跡
                 m_navmeshagent.SetDestination(m_Player.position);
-                //m_EnamyShotがあるかとm_NextShotTimeより大きかったら
-                if (m_EnamyShot != null && Time.time >= m_NextShotTime)
+                //m_Gunがあるかとm_NextShotTimeより大きかったら
+                if (m_Gun != null && Time.time >= m_NextShotTime)
                 {
-                    m_EnamyShot.Shot();
-                    //加算されていく
-                    m_NextShotTime = Time.time + m_ShotCooldown; // 1秒後に次の発射許可
+                    AssaultRifle rifle = m_Gun.GetComponent<AssaultRifle>();
+                    if (rifle != null)
+                    {
+                        rifle.Shot();  // 正しく発射処理を呼び出す
+                        m_NextShotTime = Time.time + m_ShotCooldown;
+                    }
                 }
 
             }
