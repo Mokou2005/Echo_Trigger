@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Parameta : MonoBehaviour
 {
@@ -6,8 +7,10 @@ public class Parameta : MonoBehaviour
     public string m_Team;
     //HP
     public int m_Hp = 100;
+    public int m_MaxHp = 100;
     [Header("死亡アニメーター")]
     public Animator m_Die;
+    public HPUI m_HpUI;
     public void TakeDamege(int DamegePoint)
     {
         //HPが0なら何もしない（二度死なないように）
@@ -22,5 +25,11 @@ public class Parameta : MonoBehaviour
             m_Die.SetTrigger("Die");
             Destroy(gameObject,5f);
         }
+        if (m_HpUI != null)
+        {
+            m_HpUI.UpdateHp(m_Hp, m_MaxHp);
+        }
+
     }
+
 }
