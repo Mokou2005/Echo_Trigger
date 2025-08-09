@@ -3,25 +3,33 @@ using UnityEngine.AI;
 
 public class EnemySensor : MonoBehaviour
 {
+    [Header("パトロールポイント")]
+    public Transform[] m_PatrolPoints;
     [Header("Playerのオブジェクト")]
     public Transform m_Player;
     [Header("移動の速さ")]
     public float m_speed;
-    [Header("感知の距離")]
-    public float m_viewDistance = 10f;
-    [Header("視野角（左右も角度）")]
-    public float m_viewAngle = 60f;
     // クールタイムの長さ
     [Header("弾のクールタイム")]
     public float m_ShotCooldown;
     [Header("敵が持つ銃")]
     public GameObject m_Gun;
+    [Header("ビックリマーク")]
+    public GameObject m_ExclamationMark;
+    [Header("クエスチョンマーク")]
+    public GameObject m_QuestionMark;
+    [Header("感知の距離")]
+    public float m_viewDistance = 10f;
+    [Header("視野角（左右も角度）")]
+    public float m_viewAngle = 60f;
     [Header("見失ってから諦めるまでの秒数")]
     public float m_LostPlayerDelay = 3f;
-    [Header("パトロールポイント")]
-    public Transform[] m_PatrolPoints;
     [Header("パトロール時の待機秒数")]
     public float m_WaitTime = 2f;
+    [Header("警戒度の上昇速度(1秒あたり)")]
+    public float m_VigilanceLevelIncreaseCount = 30f;
+    [Header("警戒度の減少速度（1秒あたり）")]
+    public float m_VigilanceLevelDecreaseCount = 5f;
     public Animator m_Animator;
     //どれだけ待機するかのタイマー
     private float m_WaitTimer = 0f;
@@ -31,6 +39,10 @@ public class EnemySensor : MonoBehaviour
     private int m_PatrolIndex = 0;
     //パトロール中か？
     private bool m_Patrol = true;
+    //警戒度
+    private float m_VigilanceLevel = 0f;
+    //警戒度MAX
+    private float m_VigilanceLevelMax = 50f;
     //最後に視界内で見た時間
     private float m_LastTimePlayer = 0f;
     // 次に撃てる長さ
@@ -38,21 +50,25 @@ public class EnemySensor : MonoBehaviour
     //一度でも感知したかどうか
     private NavMeshAgent m_navmeshagent;
     //playを検知したか？
-    private bool m_LookPlayer= false;
+    private bool m_LookPlayer = false;
     //scriptを参照
     private Parameta m_parameta;
     private PlayerDetectionState m_PlayerDetection;
     private void Start()
     {
-        m_Animator = GetComponent<Animator>();
-        m_parameta = GetComponent<Parameta>();
         m_navmeshagent = GetComponent<NavMeshAgent>();
         m_navmeshagent.speed = m_speed;
-        m_PlayerDetection = m_Player.GetComponent<PlayerDetectionState>();
+        //非表示
+        m_QuestionMark.SetActive(false);
+        m_ExclamationMark.SetActive(false);
+        m_Animator = GetComponent<Animator>();
+        m_parameta = GetComponent<Parameta>();
+         m_PlayerDetection = m_Player.GetComponent<PlayerDetectionState>();
     }
 
     private void Update()
     {
+
         if (m_Animator != null)
         {
             //NavMeshAgent が 動いているかどうか
@@ -77,6 +93,7 @@ public class EnemySensor : MonoBehaviour
 
         if (!isInvisible && distance <= m_viewDistance)
         {
+
             //敵を正面に設定
             Vector3 forward = transform.forward;
             //normalizedを使って敵とのベクトルを求める
@@ -90,22 +107,50 @@ public class EnemySensor : MonoBehaviour
             {
                 //プレイヤーが視界に入った
                 isInView = true;
-                m_LookPlayer = true;
-                m_LastTimePlayer = Time.time;
-                m_Patrol = false;
-                Debug.Log("攻撃状態に入る！");
-                m_navmeshagent.SetDestination(m_Player.position);
+                //警戒度を加算
+                m_VigilanceLevel += m_VigilanceLevelIncreaseCount * Time.deltaTime;
+                //警戒度の上限を設定
+                m_VigilanceLevel = Mathf.Clamp(m_VigilanceLevel, 0f, m_VigilanceLevelMax);
+                //表示
+                m_QuestionMark.SetActive(true);
+                Debug.Log($"警戒中.警戒度:{m_VigilanceLevel}");
+                //警戒度が100に達したら
+                if (m_VigilanceLevel >= m_VigilanceLevelMax)
+                {
+                    //追跡開始
+                    m_LookPlayer = true;
+                    //パトロール中止
+                    m_Patrol = false;
+                    m_LastTimePlayer = Time.time;
+                    Debug.Log("攻撃状態に入る！");
+                    //プレイヤーのところまで行け
+                    m_navmeshagent.SetDestination(m_Player.position);
+                    //表示
+                    m_ExclamationMark.SetActive(true);
+                    //非表示
+                    m_QuestionMark.SetActive(false);
+                }
+
             }
             else
             {
                 Debug.Log("プレイヤーは範囲内だが見えていない");
+                //非表示
+                m_QuestionMark.SetActive(false);
+                m_ExclamationMark.SetActive(false);
             }
         }
         else if (!isInvisible)
         {
-            Debug.Log("プレイヤーは遠すぎて感知できない");
+            Debug.Log($"プレイヤーは遠すぎて感知できない.警戒度:{m_VigilanceLevel}");
+            //警戒度減少
+            m_VigilanceLevel -= m_VigilanceLevelDecreaseCount * Time.deltaTime;
+            //警戒度の上限設定
+            m_VigilanceLevel = Mathf.Clamp(m_VigilanceLevel, 0f, m_VigilanceLevelMax);
+            //非表示
+            m_QuestionMark.SetActive(false);
+            m_ExclamationMark.SetActive(false);
         }
-
         // 追跡状態
         if (m_LookPlayer)
         {
@@ -114,6 +159,8 @@ public class EnemySensor : MonoBehaviour
             {
                 Debug.Log("プレイヤーを見失ったので追跡を終了します");
                 m_LookPlayer = false;
+                //パトロール開始
+                m_Patrol = true;
             }
             else if (!isInvisible)
             {
