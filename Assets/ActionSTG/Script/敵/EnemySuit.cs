@@ -18,12 +18,18 @@ public class EnemySuit : MonoBehaviour
     public float m_viewDistance = 10f;
     [Header("視野角（左右）")]
     public float m_viewAngle = 60f;
+    [Header("見失ってから諦めるまでの秒数")]
+    public float m_LostPlayerDelay = 3f;
     //現在のステート
     private AIState currentState = AIState.Idle;
     private Animator m_Animator;
     private NavMeshAgent m_navMeshAgent;
     //script参照
     private PlayerDetectionState m_playerDetectionState;
+    //追跡中か
+    private bool m_LookPlayer=false;
+    //最後にみた時間
+    private float m_LastTimePlayer = 0f;
     private void Start()
     {
         m_navMeshAgent = GetComponent<NavMeshAgent>();
@@ -33,17 +39,57 @@ public class EnemySuit : MonoBehaviour
     }
     private void Update()
     {
-        if (currentState == AIState.Idle)
-        {
-            Mode_Idle();
-        }
+        //ステートに応じた処理
+        if (currentState == AIState.Idle) Mode_Idle();
+        if (currentState == AIState.Search) Mode_Search();
+        if (currentState == AIState.Walk) Mode_Walk();
+        if (currentState == AIState.Attack) Mode_Attack();
         //見えない状態
         bool isInvisible = m_playerDetectionState != null && m_playerDetectionState.IsInvisible();
         // 敵からプレイヤーの方向と距離
         Vector3 toPlayer = m_Player.position - transform.position;
         float distance = toPlayer.magnitude;
         bool isInView = false;
+        //プレイヤーが透明化してなくて感知距離にいる場合
+        if (!isInvisible && distance <= m_viewDistance)
+        {
+            //敵の視野角の判定
+            Vector3 forward = transform.forward;
+            Vector3 dirToPlayer = toPlayer.normalized;
+            float dot = Vector3.Dot(forward, dirToPlayer);
+            float threshold = Mathf.Cos(m_viewAngle * 0.5f * Mathf.Deg2Rad);
+            //視野に入ったら
+            if (dot >= threshold)
+            {
+                // プレイヤーが視界内にいる
+                isInView = true;
+                m_LookPlayer = true;
+                m_LastTimePlayer = Time.time;
+
+                if (currentState != AIState.Attack)
+                    ChangeState(AIState.Attack); // 攻撃状態に移行
+            }
+        }
+
+        // 追跡中
+        if (m_LookPlayer)
+        {
+            if ((isInvisible || !isInView) && Time.time - m_LastTimePlayer > m_LostPlayerDelay)
+            {
+                // 見失った
+                m_LookPlayer = false;
+                ChangeState(AIState.Idle);
+            }
+            else
+            {
+                // 追跡続行
+                m_navMeshAgent.SetDestination(m_Player.position);
+            }
+        }
     }
+
+
+
     void ChangeState(AIState newState)
     {
         currentState = newState;
@@ -62,7 +108,7 @@ public class EnemySuit : MonoBehaviour
     {
         Debug.Log("Walk中");
     }
-    void Moge_Attack()
+    void Mode_Attack()
     {
         Debug.Log("Attack中");
     }
