@@ -49,6 +49,17 @@ public class DoorPush : MonoBehaviour
         m_PushAnimator.SetBool("Push", false);
         pushPlayed = false;  
     }
+    //エレベータ用ドア（自動ドア）
+    public void ForceDoor(bool open)
+    {
+        //開閉アニメーション
+        OC_DoorAnimaier(open);
+        //サウンド再生
+        if (open && m_Doorsound != null)
+        {
+            m_audioSource.PlayOneShot(m_Doorsound);
+        }
+    }
     //エリアに入ったら
     private void OnTriggerEnter(Collider other)
     {
