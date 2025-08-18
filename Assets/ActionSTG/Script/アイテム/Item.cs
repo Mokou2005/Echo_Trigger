@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class KeyItem : MonoBehaviour
+public class Item : MonoBehaviour
 {
-    [Header("Œ®‚Ì–¼‘O")]
-    public string KeyName;
+    [Header("ƒAƒCƒeƒ€‚Ì–¼‘O")]
+    public string m_ItemName;
     public Animator m_PlayerAnimator;
     public GameObject m_Image;
-    [Header("Œ®‚ğE‚¤‰¹")]
-    public AudioClip m_Keysound;
+    [Header("E‚¤‰¹")]
+    public AudioClip m_sound;
     private AudioSource m_audioSource;
 
     private ItemManager m_ItemManager;
@@ -27,9 +27,9 @@ public class KeyItem : MonoBehaviour
             m_PlayerAnimator.SetBool("Push", true);
             if (m_ItemManager != null)
             {
-                m_ItemManager.AddItem(KeyName);
-                m_audioSource.PlayOneShot(m_Keysound);
-                Debug.Log(KeyName + " ‚ğŠl“¾‚µ‚Ü‚µ‚½");
+                m_ItemManager.AddItem(m_ItemName);
+                m_audioSource.PlayOneShot(m_sound);
+                Debug.Log(m_ItemName + " ‚ğŠl“¾‚µ‚Ü‚µ‚½");
             }
         }
 
