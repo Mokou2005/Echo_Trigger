@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class AssaultRifle : MonoBehaviour
 {
-    [Header("eŒû‚ÌˆÊ’u")]
+    [Header("éŠƒå£ã®ä½ç½®")]
     public Transform m_Gun;
-    [Header("’e•¡»iƒvƒŒƒnƒuj")]
+    [Header("å¼¾è¤‡è£½ï¼ˆãƒ—ãƒ¬ãƒãƒ–ï¼‰")]
     public GameObject m_bulletPrefab;
-    [Header("’e‚Ì‘¬‚³")]
+    [Header("å¼¾ã®é€Ÿã•")]
     public float m_BulletSpeed;
     public AudioClip m_sound;
-    [Header("‚±‚Ìe‚ğg‚¤“G–{‘Ì")]
+    [Header("ã“ã®éŠƒã‚’ä½¿ã†æ•µæœ¬ä½“")]
     public GameObject m_Owner;
-    //ParametaQÆ
+    //Parametaå‚ç…§
     private Parameta m_Parameta;
 
     private void Start()
@@ -22,16 +22,16 @@ public class AssaultRifle : MonoBehaviour
     {
         if (m_Parameta.m_Hp > 0)
         {
-            //eŒû‚Ìİ’èieŒû‚©‚ç”­Ëj
+            //éŠƒå£ã®è¨­å®šï¼ˆéŠƒå£ã‹ã‚‰ç™ºå°„ï¼‰
             GameObject Bullet = Instantiate(m_bulletPrefab, m_Gun.position, m_Gun.rotation);
             Bullet.GetComponent<DamegeSystem>().m_Parameta = m_Parameta;
-            //ã‚ÌBullet‚ÉRigidbody‚ğŠi”[i—Í‚ğ‰Á‚¦‚é‚È‚Çj
+            //ä¸Šã®Bulletã«Rigidbodyã‚’æ ¼ç´ï¼ˆåŠ›ã‚’åŠ ãˆã‚‹ãªã©ï¼‰
             Rigidbody BulletRb = Bullet.GetComponent<Rigidbody>();
-            //’e‚ªŒ‚‚½‚ê‚é•ûŒü‚ÆƒXƒs[ƒh
+            //å¼¾ãŒæ’ƒãŸã‚Œã‚‹æ–¹å‘ã¨ã‚¹ãƒ”ãƒ¼ãƒ‰
             BulletRb.AddForce(m_Gun.forward * m_BulletSpeed);
-            //”­Ë‰¹
+            //ç™ºå°„éŸ³
             AudioSource.PlayClipAtPoint(m_sound, transform.position);
-            //ŒÜ•bŒãíœ
+            //äº”ç§’å¾Œå‰Šé™¤
             Destroy(Bullet, 5.0f);
         }
 

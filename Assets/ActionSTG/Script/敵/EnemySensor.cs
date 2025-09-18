@@ -73,7 +73,9 @@ public class EnemySensor : MonoBehaviour
         {
             //NavMeshAgent が 動いているかどうか
             bool isWalking = m_navmeshagent.velocity.magnitude > 0.1f;
-            m_Animator.SetBool("Walking", isWalking);
+            //止まったらIdelのアニメーション
+            m_Animator.SetBool("idle", isWalking);
+
         }
         //HPがゼロなら
         if (m_parameta.m_Hp <= 0)
@@ -190,11 +192,12 @@ public class EnemySensor : MonoBehaviour
     {
         if (m_Wait)
         {
+
             m_WaitTimer -= Time.deltaTime;
             if (m_WaitTimer <= 0f)
             {
+   
                 m_Wait = false;
-
                 // 次のポイントへ進む
                 m_PatrolIndex = (m_PatrolIndex + 1) % m_PatrolPoints.Length;
                 m_navmeshagent.SetDestination(m_PatrolPoints[m_PatrolIndex].position);
