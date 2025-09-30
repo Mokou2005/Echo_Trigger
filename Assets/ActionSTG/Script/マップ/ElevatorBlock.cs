@@ -59,6 +59,7 @@ public class ElevatorBlock : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+     
             m_ItemManager = other.GetComponent<ItemManager>();
             //ƒp[ƒ‹‚ğ‚Á‚Ä‚¢‚é‚©H
             if (m_ItemManager.HasItem(m_ItemName))
