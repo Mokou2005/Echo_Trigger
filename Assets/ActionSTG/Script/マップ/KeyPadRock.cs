@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
 public class KeyPadRock : MonoBehaviour
 {
     [Header("正解のコード")]
@@ -13,25 +14,34 @@ public class KeyPadRock : MonoBehaviour
     public AudioClip m_Failure;
     [Header("選択効果音")]
     public AudioClip m_Push;
+    [Header("カメラ")]
+    public Camera m_Camera;
+    [Header("不正解用の電気")]
+    public GameObject m_Electricity;
+    [Header("ダメージ")]
+    public int m_DamageOnFail = 20;
+    // プレイヤーの参照を保存しておく
+    private Parameta m_PlayerParameta;
     //エリアに入ったかどうか？
     private bool m_Aria = false;
-    //Keypadの画像の大きさ
-    private Vector3 m_originalScale;
-    // 一度拡大したかどうか
+    // Keypadを押したかどうか
     private bool m_Expanded = false;
     //入力の文字列
     private string m_Input = "";
     // 効果音を鳴らすための AudioSource
     private AudioSource m_AudioSource;
+    //正解したかどうか;
+    public bool m_OpenDoor=false;
 
 
     void Start()
     {
-        // 最初の大きさを保存しておく
-        m_originalScale = transform.localScale;
+      
         UpdateDisplay(); // 最初にリセット表示
                          // AudioSource を取得
         m_AudioSource = GetComponent<AudioSource>();
+        m_Camera.enabled = false;
+        m_Electricity.SetActive(false);
     }
     private void Update()
     {
@@ -39,12 +49,9 @@ public class KeyPadRock : MonoBehaviour
         if (m_Aria && Input.GetKeyDown(KeyCode.E) && !m_Expanded)
         {
             Debug.Log("KEYPADを選択！");
-            //拡大した
+            //カメラ表示
+            m_Camera.enabled = true;
             m_Expanded = true;
-            // 今のスケールを取得
-            Vector3 nowScale = transform.localScale;
-            // 大きさを2倍にする
-            transform.localScale = nowScale * 2f;
             //入力をリセット
             m_Input = "";
             UpdateDisplay();
@@ -52,9 +59,9 @@ public class KeyPadRock : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Tab) && m_Expanded)
         {
             Debug.Log("KEYPADから退出！");
-            //縮小した
             m_Expanded = false;
-            transform.localScale = m_originalScale;
+            //カメラを非表示
+            m_Camera.enabled = false;
             UpdateDisplay();
         }
         //拡大中の時だけ入力を受け付ける
@@ -86,11 +93,24 @@ public class KeyPadRock : MonoBehaviour
                 {
                     Debug.Log("正解！");
                     m_AudioSource.PlayOneShot(m_Success);
+                    m_OpenDoor = true;
+                    m_Camera.enabled=false;
                 }
                 else
                 {
                     Debug.Log("不正解");
                     m_AudioSource.PlayOneShot(m_Failure);
+                    StartCoroutine(EffectTime());
+                    //プレイヤーにダメージを与える
+                    if (m_PlayerParameta != null)
+                    {
+                        m_PlayerParameta.TakeDamege(m_DamageOnFail);
+                    }
+                    else
+                    {
+                        Debug.Log("m_PlayerParametaが入ってません。");
+                    }
+
 
                 }
                 // 判定後にリセットするならここ
@@ -109,23 +129,36 @@ public class KeyPadRock : MonoBehaviour
             m_DisplayText.text = m_Input.PadRight(4, '_');
         }
     }
+    //effectの時間
+    private IEnumerator EffectTime()
+    {
+        // 表示
+        m_Electricity.SetActive(true);
+        // 3秒待つ
+        yield return new WaitForSeconds(1f);
+        // 非表示
+        m_Electricity.SetActive(false);    
+    }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player")&&!m_OpenDoor)
         {
             Debug.Log("Keypadの範囲に入りました！");
             //エリアに入った
             m_Aria = true;
+            // プレイヤーのParametaを取得して保持
+            m_PlayerParameta = other.GetComponent<Parameta>();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !m_OpenDoor)
         {
             Debug.Log("Keypadの範囲から出ました！");
             //エリアに入った
             m_Aria = false;
+            m_PlayerParameta = null;
         }
     }
 }

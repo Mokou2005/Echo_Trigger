@@ -25,19 +25,40 @@ namespace StateMachineAI
         [Header("視野角（左右）")]
         public float m_viewAngle = 60f;
         private Animator m_Animator;
-        private void Start()
+
+        public Respon RSP;
+
+        public bool m_StartFlag = false;
+        /*
+        private void Update()
         {
             //存在していないクラスが指定されたら本体消滅
-            if (!AddStateByName("IdleType")) Destroy(gameObject);
-            if (!AddStateByName("SearchType")) Destroy(gameObject);
-            if (!AddStateByName("AttackType")) Destroy(gameObject);
+            // if (!AddStateByName("IdleType")) Destroy(gameObject);
+            // if (!AddStateByName("SearchType")) Destroy(gameObject);
+            // if (!AddStateByName("AttackType")) Destroy(gameObject);
             //ステートマシーンを自身として設定
-            stateMachine = new StateMachine<EnemySuitAI>();
-            m_Animator = GetComponent<Animator>();
+            //stateMachine = new StateMachine<EnemySuitAI>();
+            //m_Animator = GetComponent<Animator>();
             //初期起動時は、A_Modeに移行させる
-            ChangeState(AIState.IdleType);
+            //ChangeState(AIState.IdleType);
 
         }
+        */
+
+        public void AISetUp()
+        {
+
+                //ステートマシーンを自身として設定
+                stateMachine = new StateMachine<EnemySuitAI>();
+                m_Animator = GetComponent<Animator>();
+                //初期起動時は、A_Modeに移行させる
+                ChangeState(AIState.IdleType);
+        }
+
+
+
+
+
         public bool AddStateByName(string className)
         {
             try
