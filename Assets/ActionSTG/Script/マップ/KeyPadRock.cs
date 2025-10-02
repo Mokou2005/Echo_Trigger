@@ -134,7 +134,7 @@ public class KeyPadRock : MonoBehaviour
     {
         // •\Ž¦
         m_Electricity.SetActive(true);
-        // 3•b‘Ò‚Â
+        // 1•b‘Ò‚Â
         yield return new WaitForSeconds(1f);
         // ”ñ•\Ž¦
         m_Electricity.SetActive(false);    
