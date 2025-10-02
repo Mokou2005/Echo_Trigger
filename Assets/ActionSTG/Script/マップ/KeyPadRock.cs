@@ -20,6 +20,10 @@ public class KeyPadRock : MonoBehaviour
     public GameObject m_Electricity;
     [Header("ダメージ")]
     public int m_DamageOnFail = 20;
+    [Header("Buttanのscript")]
+    public Buttun m_Buttan;
+    [Header("吹き出し")]
+    public GameObject m_Hukidasi;
     // プレイヤーの参照を保存しておく
     private Parameta m_PlayerParameta;
     //エリアに入ったかどうか？
@@ -31,35 +35,45 @@ public class KeyPadRock : MonoBehaviour
     // 効果音を鳴らすための AudioSource
     private AudioSource m_AudioSource;
     //正解したかどうか;
-    public bool m_OpenDoor=false;
+    public bool m_OpenDoor = false;
 
 
     void Start()
     {
-      
-        UpdateDisplay(); // 最初にリセット表示
-                         // AudioSource を取得
+        // 最初にリセット表示
+        UpdateDisplay();
+        // AudioSource を取得
         m_AudioSource = GetComponent<AudioSource>();
+        //非表示
         m_Camera.enabled = false;
         m_Electricity.SetActive(false);
+        m_Hukidasi.SetActive(false);
     }
     private void Update()
     {
         // Eキーを押したら大きくする
-        if (m_Aria && Input.GetKeyDown(KeyCode.E) && !m_Expanded)
+        if (m_Aria && Input.GetKeyDown(KeyCode.E) && !m_Expanded&& !m_OpenDoor)
         {
             Debug.Log("KEYPADを選択！");
+            m_Expanded = true;
+            //画像表示
+            m_Buttan.m_TABImage.enabled = true;
+            m_Buttan.m_ENTERImage.enabled = true;
+            m_Buttan.m_BACKSPACEImage.enabled = true;
             //カメラ表示
             m_Camera.enabled = true;
-            m_Expanded = true;
             //入力をリセット
             m_Input = "";
             UpdateDisplay();
         }
-        else if (Input.GetKeyDown(KeyCode.Tab) && m_Expanded)
+        else if (Input.GetKeyDown(KeyCode.Tab) && m_Expanded&& !m_OpenDoor)
         {
             Debug.Log("KEYPADから退出！");
             m_Expanded = false;
+            //画像非表示
+            m_Buttan.m_TABImage.enabled = false;
+            m_Buttan.m_ENTERImage.enabled = false;
+            m_Buttan.m_BACKSPACEImage.enabled = false;
             //カメラを非表示
             m_Camera.enabled = false;
             UpdateDisplay();
@@ -69,7 +83,7 @@ public class KeyPadRock : MonoBehaviour
         {
             for (int i = 0; i <= 9; i++)
             {
-                if (m_Input.Length < 4) 
+                if (m_Input.Length < 4)
                 {
                     if (Input.GetKeyDown(i.ToString()))
                     {
@@ -94,13 +108,23 @@ public class KeyPadRock : MonoBehaviour
                     Debug.Log("正解！");
                     m_AudioSource.PlayOneShot(m_Success);
                     m_OpenDoor = true;
-                    m_Camera.enabled=false;
+                    m_Camera.enabled = false;
+                    //画像非表示
+                    m_Buttan.m_TABImage.enabled = false;
+                    m_Buttan.m_ENTERImage.enabled = false;
+                    m_Buttan.m_BACKSPACEImage.enabled = false;
                 }
                 else
                 {
                     Debug.Log("不正解");
                     m_AudioSource.PlayOneShot(m_Failure);
                     StartCoroutine(EffectTime());
+                    m_Camera.enabled = false;
+                    m_Expanded = false;
+                    //画像非表示
+                    m_Buttan.m_TABImage.enabled = false;
+                    m_Buttan.m_ENTERImage.enabled = false;
+                    m_Buttan.m_BACKSPACEImage.enabled = false;
                     //プレイヤーにダメージを与える
                     if (m_PlayerParameta != null)
                     {
@@ -110,6 +134,7 @@ public class KeyPadRock : MonoBehaviour
                     {
                         Debug.Log("m_PlayerParametaが入ってません。");
                     }
+
 
 
                 }
@@ -137,17 +162,19 @@ public class KeyPadRock : MonoBehaviour
         // 1秒待つ
         yield return new WaitForSeconds(1f);
         // 非表示
-        m_Electricity.SetActive(false);    
+        m_Electricity.SetActive(false);
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")&&!m_OpenDoor)
+        if (other.CompareTag("Player") && !m_OpenDoor)
         {
             Debug.Log("Keypadの範囲に入りました！");
             //エリアに入った
             m_Aria = true;
             // プレイヤーのParametaを取得して保持
             m_PlayerParameta = other.GetComponent<Parameta>();
+            m_Hukidasi.SetActive(true);
+
         }
     }
 
@@ -159,6 +186,7 @@ public class KeyPadRock : MonoBehaviour
             //エリアに入った
             m_Aria = false;
             m_PlayerParameta = null;
+            m_Hukidasi.SetActive(false);
         }
     }
 }
