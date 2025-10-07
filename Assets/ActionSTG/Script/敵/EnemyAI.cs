@@ -8,6 +8,9 @@ namespace StateMachineAI
         IdleSuitType,
         SearchSuitType,
         AttackSuitType,
+        SecurityMove,
+        SecuritySearch,
+        SecurityAttack,
     }
     public class EnemyAI : StatefulObjectBase<EnemyAI, AIState>
     {
@@ -48,11 +51,13 @@ namespace StateMachineAI
         public void AISetUp()
         {
 
-                //ステートマシーンを自身として設定
-                stateMachine = new StateMachine<EnemyAI>();
-                m_Animator = GetComponent<Animator>();
-                //初期起動時は、A_Modeに移行させる
-                ChangeState(AIState.IdleSuitType);
+            //ステートマシーンを自身として設定
+            stateMachine = new StateMachine<EnemyAI>();
+            m_Animator = GetComponent<Animator>();
+            //初期起動時は、A_Modeに移行させる
+            ChangeState(AIState.IdleSuitType);
+            //初期起動時は、A_Modeに移行させる
+           // ChangeState(AIState.SecurityMove);
         }
 
 
