@@ -46,10 +46,11 @@ public class Respon : MonoBehaviour
             {
                 EA.AddStateByName(dummy);
             }
+
+
+
+
+            EA.AISetUp();
         }
-
-
-
-        EA.AISetUp();
     }
 }

@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 5847034482251674772}
   - component: {fileID: 6124585051858500157}
   - component: {fileID: 5464309543482297326}
-  - component: {fileID: 142428353472623429}
+  - component: {fileID: 7342940952977568026}
   m_Layer: 0
   m_Name: "\u9283\u6301\u3061"
   m_TagString: Untagged
@@ -357,7 +357,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &142428353472623429
+--- !u!114 &7342940952977568026
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -366,25 +366,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 4534998794402684926}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c1073daf2286374793522f4e4f988e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f8651a77b8319a4893a687e76285f0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PatrolPoints:
-  - {fileID: 0}
-  - {fileID: 0}
   m_Player: {fileID: 0}
-  m_speed: 1
-  m_ShotCooldown: 0.1
-  m_Gun: {fileID: 774509730142434574}
-  m_ExclamationMark: {fileID: 1097705020105740257}
-  m_QuestionMark: {fileID: 1047219941647922395}
+  m_EnemyCall: {fileID: 0}
+  enemyPrefab: {fileID: 0}
+  spawnPoint: {fileID: 0}
+  m_suitEnemy: {fileID: 0}
   m_viewDistance: 10
   m_viewAngle: 60
-  m_LostPlayerDelay: 3
-  m_WaitTime: 4
-  m_VigilanceLevelIncreaseCount: 20
-  m_VigilanceLevelDecreaseCount: 5
-  m_Animator: {fileID: 7170238278757213490}
+  RSP: {fileID: 0}
+  m_StartFlag: 0
 --- !u!1 &7060329469122872541
 GameObject:
   m_ObjectHideFlags: 0
