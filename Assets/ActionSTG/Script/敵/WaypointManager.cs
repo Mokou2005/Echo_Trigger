@@ -11,10 +11,11 @@ public class WaypointManager : MonoBehaviour
         if (m_Waypoints == null || m_Waypoints.Length == 0)
         {
             m_Waypoints = GetComponentsInChildren<Transform>();
+            Debug.Log("子オブジェクトから自動でWaypointsを登録しました。");
         }
         else
         {
-            Debug.Log("敵のポイント移動が設定されていない、またはポイントがアタッチされていないです。");
+            Debug.Log("インスペクターでWaypointsが手動設定されています。");
         }
     }
 }
