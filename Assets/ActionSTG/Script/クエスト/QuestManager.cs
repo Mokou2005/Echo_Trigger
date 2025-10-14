@@ -5,17 +5,28 @@ public class QuestManager : MonoBehaviour
     [Header("最初のクエストデータ")]
     public QuestData m_StartQuest;
     private QuestData m_questData;
-
-     void Start()
+    [Header("UIマネージャー参照")]
+    public QuestUIManager m_UIManager;
+    void Start()
     {
         StartQuest(m_StartQuest);
     }
 
     void StartQuest(QuestData quest)
     {
-        //最初のクエストを入れる
         m_questData = quest;
         Debug.Log($"クエスト開始:{m_questData.m_QuestName}");
+
+        var ui = FindObjectOfType<QuestUIManager>();
+        if (ui != null)
+        {
+            ui.SetQuestUI(m_questData);
+            Debug.Log("UI更新完了！");
+        }
+        else
+        {
+            Debug.LogWarning("QuestUIManager がシーンに見つかりません！");
+        }
     }
 
     public void OnItemObtained(string itemName)

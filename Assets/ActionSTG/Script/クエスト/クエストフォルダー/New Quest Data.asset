@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e702d54b9c2d0e4690c334781f3ef0e, type: 3}
   m_Name: New Quest Data
   m_EditorClassIdentifier: 
-  m_QuestName: "\u30A2\u30A4\u30C6\u30E0\u3092\u3068\u308C\uFF01"
-  m_Description: "\u56DB\u89D2\u306E\u30AD\u30E5\u30FC\u30D6\u3092\u3068\u308C\uFF01\uFF01"
-  m_Item: "\u30AD\u30E5\u30FC\u30D6"
-  m_NextQuest: {fileID: 11400000, guid: 5ee161bd7218c064099a15f36bcaae28, type: 2}
+  m_QuestName: 
+  m_TitleImage: {fileID: 0}
+  m_DescriptionImage: {fileID: 0}
+  m_Item: 
+  m_NextQuest: {fileID: 0}

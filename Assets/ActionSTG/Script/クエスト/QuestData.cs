@@ -1,15 +1,20 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName ="クエストシステム/クエスト")]
-public class QuestData :ScriptableObject
+[CreateAssetMenu(menuName = "Quest/New Quest Data")]
+public class QuestData : ScriptableObject
 {
     [Header("クエスト名")]
     public string m_QuestName;
-    [Header("説明文")]
-    [TextArea]
-    public string m_Description;
-    [Header("達成条件（アイテム）")]
+
+    [Header("タイトル画像（上に表示）")]
+    public Sprite m_TitleImage;
+
+    [Header("説明画像（下に表示）")]
+    public Sprite m_DescriptionImage;
+
+    [Header("達成条件（アイテム名など）")]
     public string m_Item;
-    [Header("次のクエストデータ")]
+
+    [Header("次のクエスト")]
     public QuestData m_NextQuest;
 }

@@ -16,6 +16,11 @@ public class EnemyPatrol_Hybrid : MonoBehaviour
         MoveToNextMainPoint();
     }
 
+    void Update()
+    {
+        Move(); 
+    }
+
     public void Move()
     {
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
