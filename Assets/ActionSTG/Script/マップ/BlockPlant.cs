@@ -26,7 +26,9 @@ public class BlockPlant : MonoBehaviour
     {
         if (m_isArea && Input.GetKeyDown(KeyCode.E))
         {
-           m_RockObject.SetActive(false);
+            // クエストマネージャーに通知
+            FindObjectOfType<QuestManager>().OnItemObtained(m_ItemName);
+            m_RockObject.SetActive(false);
         }
     }
     private void OnTriggerEnter(Collider other)

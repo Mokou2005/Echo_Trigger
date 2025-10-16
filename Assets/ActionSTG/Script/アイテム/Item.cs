@@ -27,6 +27,8 @@ public class Item : MonoBehaviour
             m_PlayerAnimator.SetBool("Push", true);
             if (m_ItemManager != null)
             {
+                // クエストマネージャーに通知
+                FindObjectOfType<QuestManager>().OnItemObtained(m_ItemName);
                 m_ItemManager.AddItem(m_ItemName);
                 m_audioSource.PlayOneShot(m_sound);
                 Debug.Log(m_ItemName + " を獲得しました");

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e702d54b9c2d0e4690c334781f3ef0e, type: 3}
   m_Name: "\u30AF\u30A8\u30B9\u30C8\uFF11"
   m_EditorClassIdentifier: 
-  m_QuestName: "\u30A2\u30A4\u30C6\u30E0\u3092\u3068\u308C\uFF01"
-  m_TitleImage: {fileID: 21300000, guid: 1a1dc6150637d254fbff2d50236c6f7c, type: 3}
-  m_DescriptionImage: {fileID: 21300000, guid: 7691b5bdd40441440a79e27ccb8ddb0e, type: 3}
-  m_Item: "\u30AD\u30E5\u30FC\u30D6"
-  m_NextQuest: {fileID: 11400000, guid: 5ee161bd7218c064099a15f36bcaae28, type: 2}
+  m_QuestName: "\u63A2\u7D22\u3092\u3057\u3087\u3046"
+  m_TitleImage: {fileID: 21300000, guid: 51cb7f78e4fef814ba69daafa9cba0f2, type: 3}
+  m_DescriptionImage: {fileID: 21300000, guid: feb20c27989b3874e97d030835c9569d, type: 3}
+  m_Item: "\u7A7A\u304B\u306A\u3044\u6249"
+  m_NextQuest: {fileID: 11400000, guid: 48a532a7f4bda204d9400dfe824bd30a, type: 2}

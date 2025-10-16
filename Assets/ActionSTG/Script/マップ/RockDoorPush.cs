@@ -19,6 +19,11 @@ public class RockDoorPush : MonoBehaviour
     private bool pushPlayed = false;
     //エリア（トリガー）
     private bool isInArea = false;
+    //クエストをクリアしたか
+    private bool m_Clear=false;
+
+
+
     //アイテム管理を参照
     private ItemManager m_itemManager;
 
@@ -39,6 +44,7 @@ public class RockDoorPush : MonoBehaviour
             //Keyは持っているか
             if (m_itemManager.HasItem(m_KeyName))
             {
+                m_Clear = true;
                 //開く音
                 m_audioSource.PlayOneShot(m_Doorsound);
                 pushPlayed = true;
@@ -49,6 +55,11 @@ public class RockDoorPush : MonoBehaviour
                 // 0.5秒後にPushを戻す
                 Invoke(nameof(ResetPush), 0.5f);
                 m_OnImage.SetActive(false);
+                if (m_Clear)
+                {
+                    // クエストマネージャーに通知
+                    FindObjectOfType<QuestManager>().OnItemObtained(m_KeyName);
+                }
             }
         }
     }
@@ -64,7 +75,7 @@ public class RockDoorPush : MonoBehaviour
         //パラメータを持っている人だけ
         if (other.GetComponent<Parameta>())
         {
-            m_itemManager=other.GetComponent<ItemManager>();
+            m_itemManager = other.GetComponent<ItemManager>();
             //Keyをもっていたら
             if (m_itemManager.HasItem(m_KeyName))
             {

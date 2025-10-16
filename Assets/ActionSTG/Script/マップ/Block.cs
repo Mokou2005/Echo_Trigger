@@ -41,7 +41,9 @@ public class Block : MonoBehaviour
     {
         if (m_isArea && Input.GetKeyDown(KeyCode.E))
         {
-            
+            // クエストマネージャーに通知
+            FindObjectOfType<QuestManager>().OnItemObtained(m_ItemName);
+
             if (m_Scripts != null)
             {
                 //削除したスクリプトを表示
