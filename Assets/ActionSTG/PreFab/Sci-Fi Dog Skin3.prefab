@@ -83,7 +83,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d13700fe717bf3e40b7870e52a6ee6e2,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6677369260586336919}
+      addedObject: {fileID: -3679527243008968794}
   m_SourcePrefab: {fileID: 100100000, guid: d13700fe717bf3e40b7870e52a6ee6e2, type: 3}
 --- !u!1 &390710742360739429 stripped
 GameObject:
@@ -135,7 +135,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &6677369260586336919
+--- !u!114 &-3679527243008968794
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,7 +144,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 390710742360739429}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac01c6e484f74b24b949665fe6f37655, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f8651a77b8319a4893a687e76285f0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Manager: {fileID: 0}
+  m_Player: {fileID: 0}
+  m_EnemyCall: {fileID: 0}
+  enemyPrefab: {fileID: 0}
+  spawnPoint: {fileID: 0}
+  m_suitEnemy: {fileID: 0}
+  m_viewDistance: 10
+  m_viewAngle: 60
+  m_RSP: {fileID: 0}
+  m_StartFlag: 0

@@ -47,7 +47,7 @@ namespace StateMachineAI
                 if (m_VigilanceLevel >= m_VigilanceLevelMax)
                 {
                     Debug.Log("プレイヤーを完全に発見！");
-                    owner.ChangeState(AIState.AttackSuitType);
+                    owner.ChangeState(AIState.Attack);
                 }
             }
             else
@@ -60,7 +60,7 @@ namespace StateMachineAI
                 {
                     Debug.Log("警戒解除 → Idleへ戻る");
                     m_Animator.SetBool("Search", false);
-                    owner.ChangeState(AIState.IdleSuitType);
+                    owner.ChangeState(AIState.Idle);
                 }
             }
         }

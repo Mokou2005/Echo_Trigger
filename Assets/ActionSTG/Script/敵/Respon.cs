@@ -27,12 +27,18 @@ public class Respon : MonoBehaviour
     public void Start()
     {
         SetUp();
+
     }
     public void SetUp()
     {
         GameObject D = Instantiate(m_Body, transform.position, transform.rotation);
         EnemyAI EA = D.GetComponent<EnemyAI>();
-        EA.RSP = this;
+        if (EA == null)
+        {
+            Debug.LogError($"{m_Body.name} に EnemyAI がアタッチされていません！", D);
+            return;
+        }
+        EA.m_RSP = this;
         EA.m_Player = m_Player;
         //指定したタイプのリストがない場合通知する
         if (m_Ainame[m_UnitType].AIName.Count == 0)

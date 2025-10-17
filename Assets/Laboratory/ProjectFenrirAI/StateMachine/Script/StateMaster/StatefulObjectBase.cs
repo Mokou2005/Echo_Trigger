@@ -32,8 +32,7 @@ namespace StateMachineAI
             ///ステートマシーン内がnullの場合
             if (stateMachine == null)
             {
-                ///無いから戻れ、慈悲はない。イヤャャャャヤ!!
-                ///つまり、遷移したくても遷移できないので弾く
+
                 return;
             }
             ///該当するステートをステートマシーンのステートとして登録する
@@ -50,8 +49,7 @@ namespace StateMachineAI
             ///ステートマシーン内がnullの場合
             if (stateMachine == null)
             {
-                ///無いから戻れ、慈悲はない。イヤャャャャヤ!!
-                ///つまり、遷移したくても遷移できないので弾く
+
                 return false;
             }
             ///現在のステートマシンで稼働しているステートと、指定したステートが同じかどうかをBool値で返す

@@ -5,12 +5,10 @@ namespace StateMachineAI
 {
     public enum AIState
     {
-        IdleSuitType,
-        SearchSuitType,
-        AttackSuitType,
-        SecurityMove,
-        SecuritySearch,
-        SecurityAttack,
+        Idle,
+        Search,
+        Move,
+        Attack,
     }
     public class EnemyAI : StatefulObjectBase<EnemyAI, AIState>
     {
@@ -29,7 +27,7 @@ namespace StateMachineAI
         public float m_viewAngle = 60f;
         private Animator m_Animator;
 
-        public Respon RSP;
+        public Respon m_RSP;
 
         public bool m_StartFlag = false;
         /*
@@ -54,10 +52,10 @@ namespace StateMachineAI
             //ステートマシーンを自身として設定
             stateMachine = new StateMachine<EnemyAI>();
             m_Animator = GetComponent<Animator>();
-            //初期起動時は、A_Modeに移行させる
-            ChangeState(AIState.IdleSuitType);
-            //初期起動時は、A_Modeに移行させる
-           // ChangeState(AIState.SecurityMove);
+             ChangeState(AIState.Idle);
+                 
+            
+
         }
 
 

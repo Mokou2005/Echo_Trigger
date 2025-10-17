@@ -66,7 +66,7 @@ namespace StateMachineAI
                 if (dot >= threshold)
                 {
                     Debug.Log("SecuritySearch�Ɉڍs");
-                    owner.ChangeState(AIState.SecuritySearch);
+                    owner.ChangeState(AIState.Search);
                 }
             }
         }

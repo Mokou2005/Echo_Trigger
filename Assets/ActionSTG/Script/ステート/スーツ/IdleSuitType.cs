@@ -50,7 +50,7 @@ namespace StateMachineAI
                     // ƒvƒŒƒCƒ„[‚ª‹ŠE“à‚É“ü‚Á‚½
                     isInView = true;
                     m_LastTimePlayer = Time.time;
-                    owner.ChangeState(AIState.SearchSuitType);
+                    owner.ChangeState(AIState.Search);
                 }
                 else
                 {

@@ -69,7 +69,7 @@ namespace StateMachineAI
                     //Œx‰ú“x‚ª100‚É’B‚µ‚½‚ç
                     if (m_VigilanceLevel >= m_VigilanceLevelMax)
                     {
-                        owner.ChangeState(AIState.SecurityAttack);
+                        owner.ChangeState(AIState.Attack);
                         
                     }
 

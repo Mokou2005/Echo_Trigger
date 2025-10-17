@@ -24,6 +24,7 @@ public class Sensor : MonoBehaviour
 
     private void Awake()
     {
+        //検知するため
         SphereCollider col = GetComponent<SphereCollider>();
         col.isTrigger = true;
         col.radius = m_viewDistance;
@@ -31,6 +32,7 @@ public class Sensor : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        //検知内にプレイヤーがいたら
         if (other.CompareTag(m_targetTag))
         {
             m_Target = other.transform;
@@ -46,11 +48,19 @@ public class Sensor : MonoBehaviour
             {
                 // プレイヤーが視野内にいる場合、警戒度を上げる
                 m_VigilanceLevel += m_VigilanceLevelIncreaseCount * Time.deltaTime;
+                Debug.Log($"警戒中（視認中）: {m_VigilanceLevel}");
             }
             else
             {
                 // 視野外なら警戒度を下げる
                 m_VigilanceLevel -= m_VigilanceLevelDecreaseCount * Time.deltaTime;
+                Debug.Log($"警戒中（未視認）: {m_VigilanceLevel}");
+            }
+            // デバッグ用
+            if (m_VigilanceLevel >= m_VigilanceLevelMax)
+            {
+
+                Debug.Log("敵が完全にプレイヤーを発見！");
             }
 
             m_VigilanceLevel = Mathf.Clamp(m_VigilanceLevel, 0, m_VigilanceLevelMax);
@@ -65,14 +75,7 @@ public class Sensor : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        // デバッグ用
-        if (m_VigilanceLevel >= m_VigilanceLevelMax)
-        {
-            Debug.Log("敵が完全にプレイヤーを発見！");
-        }
-    }
+
 
     public bool IsPlayerVisible()
     {
