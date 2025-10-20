@@ -9,7 +9,7 @@ namespace StateMachineAI
         public DogAttack(EnemyAI owner) : base(owner) { }
         public override void Enter()
         {
-
+            
         }
 
         public override void Stay()

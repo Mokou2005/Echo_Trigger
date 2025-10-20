@@ -6,8 +6,8 @@ namespace StateMachineAI
     public enum AIState
     {
         Idle,
-        Search,
         Move,
+        Search,
         Attack,
     }
     public class EnemyAI : StatefulObjectBase<EnemyAI, AIState>
@@ -25,7 +25,7 @@ namespace StateMachineAI
         public float m_viewDistance = 10f;
         [Header("‹–ìŠpi¶‰Ej")]
         public float m_viewAngle = 60f;
-        private Animator m_Animator;
+        public Animator m_Animator;
 
         public Respon m_RSP;
 

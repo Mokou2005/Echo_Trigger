@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 namespace StateMachineAI
 {
@@ -71,5 +71,5 @@ namespace StateMachineAI
             Debug.Log($"[{owner.name}] SearchSuitTypeèIóπ");
         }
     }
-}
+}*/
 

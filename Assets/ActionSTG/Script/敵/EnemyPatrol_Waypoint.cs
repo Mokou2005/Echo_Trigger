@@ -1,3 +1,4 @@
+using Unity.Services.Analytics;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -5,6 +6,8 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
 {
     [Header("WaypointManagerのscriptをアタッチ")]
     public WaypointManager m_Manager;
+    [Header("Sensorをアタッチ")]
+    public Sensor m_Sensor;
     private NavMeshAgent m_agent;
     //どのWaypointに向かっているか
     private int m_currentIndex = 0;
@@ -12,11 +15,16 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
     [System.Obsolete]
     private void Start()
     {
+        m_Sensor=GetComponent<Sensor>();
         m_agent = GetComponent<NavMeshAgent>();
         //マネージャーが未設定なら、近くのものを自動検索
         if (m_Manager == null)
         {
             m_Manager = FindClosestManager(); ;
+        }
+        if (m_Sensor==null)
+        {
+            Debug.Log("センサーが入ってません");
         }
         ////次のPointへ
         MoveToNextPoint();
@@ -24,10 +32,25 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
 
     private void Update()
     {
-        //NavMeshAgentがまだ経路を計算中ではなく現在の目的地に到着したら
-        if (!m_agent.pathPending && m_agent.remainingDistance < 0.5f)
-            //次のPointへ
-            MoveToNextPoint();
+        if (m_agent.enabled)
+        {
+            //NavMeshAgentがまだ経路を計算中ではなく現在の目的地に到着したら
+            if (!m_agent.pathPending && m_agent.remainingDistance < 0.5f)
+                //次のPointへ
+                MoveToNextPoint();
+        }
+
+        //センサーが反応したら
+        if (m_Sensor.m_Look==true)
+        {
+            //Navmesh無効
+           m_agent.enabled =false;
+
+        }
+        if (m_Sensor.m_Look == false)
+        {
+            m_agent.enabled = true;
+        }
     }
     void MoveToNextPoint()
     {
@@ -41,6 +64,7 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
         //配列の最後まで行ったら最初に戻る
         m_currentIndex = (m_currentIndex + 1) % m_Manager.m_Waypoints.Length;
     }
+
 
     // 最も近いManagerを探す
     [System.Obsolete]

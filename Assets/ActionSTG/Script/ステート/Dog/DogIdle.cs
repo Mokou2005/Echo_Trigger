@@ -6,9 +6,17 @@ namespace StateMachineAI
 
     public class DogIdle : State<EnemyAI>
     {
+        private Animator m_animator;
+        private Sensor m_sensor;
         public DogIdle(EnemyAI owner) : base(owner) { }
         public override void Enter()
         {
+           
+
+         
+                owner.ChangeState(AIState.Move);
+            
+
 
         }
 
@@ -17,7 +25,7 @@ namespace StateMachineAI
 
         }
 
-        public override void Exit() 
+        public override void Exit()
         {
         }
     }

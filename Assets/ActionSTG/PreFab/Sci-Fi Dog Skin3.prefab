@@ -154,5 +154,6 @@ MonoBehaviour:
   m_suitEnemy: {fileID: 0}
   m_viewDistance: 10
   m_viewAngle: 60
+  m_Animator: {fileID: 0}
   m_RSP: {fileID: 0}
   m_StartFlag: 0
