@@ -1,37 +1,38 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 namespace StateMachineAI
 {
 
     public class DogAttack : State<EnemyAI>
     {
-        private Animator m_Animator;
-        private DogSound m_DogSound;
-        //âìñiÇ¶ÇÇµÇΩÇ©
-        private bool m_Howl=false;
+        private Bite m_Bite;
         public DogAttack(EnemyAI owner) : base(owner) { }
         public override void Enter()
         {
-            m_Animator=owner.GetComponent<Animator>();
-            m_DogSound= owner.GetComponent<DogSound>();
+            Bite Bi = owner.GetComponent<Bite>();
+            if (Bi == null)
+            {
+                Debug.Log("BiteÇ™Ç»Ç©Ç¡ÇΩÇÃÇ≈é©ìÆí«â¡ÇµÇ‹Ç∑ÅB");
+                Bi = owner.gameObject.AddComponent<Bite>();
+            }
 
         }
 
         public override void Stay()
         {
-            //Ç‹ÇæñiÇ¶Çƒñ≥ÇØÇÍÇŒ
-            if (m_Howl==false)
-            {
-                m_Animator.SetTrigger("Howling");
-                m_DogSound.m_Source.PlayOneShot(m_DogSound.m_Howling);
-                m_Howl=true;
-            }
+           
+            
+
         }
 
         public override void Exit()
         {
         }
+
+
     }
 
 }

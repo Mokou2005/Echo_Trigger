@@ -8,6 +8,8 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
     public WaypointManager m_Manager;
     [Header("Sensorをアタッチ")]
     public Sensor m_Sensor;
+    [Header("AlertLevelをアタッチ")]
+    public AlertLevel m_AlertLevel;
     private NavMeshAgent m_agent;
     //どのWaypointに向かっているか
     private int m_currentIndex = 0;
@@ -17,6 +19,7 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
     {
         m_Sensor=GetComponent<Sensor>();
         m_agent = GetComponent<NavMeshAgent>();
+        m_AlertLevel = GetComponent<AlertLevel>();
         //マネージャーが未設定なら、近くのものを自動検索
         if (m_Manager == null)
         {
@@ -41,13 +44,13 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
         }
 
         //センサーが反応したら
-        if (m_Sensor.m_Look==true)
+        if (m_Sensor.m_Look==true&&m_AlertLevel.m_AttackMode==false)
         {
             //Navmesh無効
            m_agent.enabled =false;
 
         }
-        if (m_Sensor.m_Look == false)
+        if (m_Sensor.m_Look == false && m_AlertLevel.m_AttackMode == false)
         {
             m_agent.enabled = true;
         }

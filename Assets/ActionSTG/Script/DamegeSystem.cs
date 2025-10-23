@@ -2,38 +2,27 @@ using UnityEngine;
 
 public class DamegeSystem : MonoBehaviour
 {
-    //攻撃力
-    public int m_DamegePoint;
-    //パラメータ
-    public Parameta m_Parameta;
-  
+    public int m_DamegePoint = 1; // 攻撃力
+    public Parameta m_Parameta;   // 攻撃者の情報
 
-    //衝突
+    private bool m_HitOnce = false;
+
+    private void OnEnable()
+    {
+        // 新しく生成されたときにリセット
+        m_HitOnce = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        
-        //パラメータがついているか
-        if (m_Parameta)
-        {
-            
+        if (m_HitOnce) return;
 
-            //パラメータを持っているか
-            if (other.gameObject.GetComponent<Parameta>())
-            {
-               
-                //パラメータを持っていて同じチームではないか
-                if (other.gameObject.GetComponent<Parameta>().m_Team != m_Parameta.m_Team)
-                {
-                   
-                    //ダメージを与える
-                    other.gameObject.GetComponent<Parameta>().TakeDamege(m_DamegePoint);
-                    Destroy(gameObject);
-                }
-            }
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        Parameta target = other.GetComponent<Parameta>();
+        if (target == null || m_Parameta == null) return;
+
+        if (target.m_Team == m_Parameta.m_Team) return;
+
+        target.TakeDamege(m_DamegePoint);
+        m_HitOnce = true;
     }
 }

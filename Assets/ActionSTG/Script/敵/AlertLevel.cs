@@ -11,7 +11,7 @@ public class AlertLevel : MonoBehaviour
     public float m_decreaseRate = 5f;
 
     [Header("警戒度MAX")]
-    public float m_maxLevel = 100f;
+    public float m_maxLevel = 50f;
 
     [Header("現在の警戒度")]
     public float m_currentLevel = 0f;
@@ -20,6 +20,10 @@ public class AlertLevel : MonoBehaviour
     public bool m_autoAlert = true;
 
     private EnemyAI enemyAI;
+    //攻撃モードに入ったかどうか
+    public bool m_AttackMode=false;
+
+
 
     void Start()
     {
@@ -33,11 +37,12 @@ public class AlertLevel : MonoBehaviour
         m_currentLevel += m_increaseRate * Time.deltaTime;
         //警戒度の上限と下限を設定
         m_currentLevel = Mathf.Clamp(m_currentLevel, 0, m_maxLevel);
-        Debug.Log($"警戒度上昇中: {m_currentLevel:F1}/{m_maxLevel}");
+        //Debug.Log($"警戒度上昇中: {m_currentLevel:F1}/{m_maxLevel}");
         //レベルマックスより上回ったら攻撃状態へ
         if (m_autoAlert && m_currentLevel >= m_maxLevel)
         {
             Debug.Log("警戒度MAX → 攻撃モードへ");
+            m_AttackMode = true;
             if (enemyAI != null)
                 enemyAI.ChangeState(AIState.Attack);
         }

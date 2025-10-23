@@ -57,6 +57,9 @@ public class Playercontroller : MonoBehaviour
         //リロード中は移動禁止
         if (Reload.m_Reloading)
             return;
+        //噛まれているときは移動禁止
+        if (Bite.m_BiteOut)
+            return;
         // キャラクターとカメラの左右回転（Y軸）
         transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * CameraSpeed, 0));
         //移動

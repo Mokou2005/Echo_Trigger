@@ -36,6 +36,7 @@ public class RockDoorPush : MonoBehaviour
 
     }
 
+    [System.Obsolete]
     private void Update()
     {
         // 入力は毎フレームチェック
@@ -75,19 +76,22 @@ public class RockDoorPush : MonoBehaviour
         //パラメータを持っている人だけ
         if (other.GetComponent<Parameta>())
         {
-            m_itemManager = other.GetComponent<ItemManager>();
-            //Keyをもっていたら
-            if (m_itemManager.HasItem(m_KeyName))
+            if (other.GetComponent<Parameta>().m_Team == "Player")
             {
-                //エリア検知
-                isInArea = true;
-                //画像表示
-                m_OnImage.SetActive(true);
-            }
-            else
-            {
-                //画像表示
-                m_NoImage.SetActive(true);
+                m_itemManager = other.GetComponent<ItemManager>();
+                //Keyをもっていたら
+                if (m_itemManager.HasItem(m_KeyName))
+                {
+                    //エリア検知
+                    isInArea = true;
+                    //画像表示
+                    m_OnImage.SetActive(true);
+                }
+                else
+                {
+                    //画像表示
+                    m_NoImage.SetActive(true);
+                }
             }
         }
     }
@@ -97,21 +101,25 @@ public class RockDoorPush : MonoBehaviour
         //パラメータを持っている人だけ
         if (other.GetComponent<Parameta>())
         {
-            //Keyをもっているか
-            if (m_itemManager.HasItem(m_KeyName))
+            if (other.GetComponent<Parameta>().m_Team == "Player")
             {
-                //エリア非検知
-                isInArea = false;
-                //画像非表示
-                m_OnImage.SetActive(false);
-                //ドアアニメーション（オフ）
-                OC_DoorAnimaier(false);
+                //Keyをもっているか
+                if (m_itemManager.HasItem(m_KeyName))
+                {
+                    //エリア非検知
+                    isInArea = false;
+                    //画像非表示
+                    m_OnImage.SetActive(false);
+                    //ドアアニメーション（オフ）
+                    OC_DoorAnimaier(false);
+                }
+                else
+                {
+                    //画像非表示
+                    m_NoImage.SetActive(false);
+                }
             }
-            else
-            {
-                //画像非表示
-                m_NoImage.SetActive(false);
-            }
+           
         }
     }
 

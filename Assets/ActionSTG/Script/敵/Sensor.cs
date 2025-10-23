@@ -17,6 +17,7 @@ public class Sensor : MonoBehaviour
     private AlertLevel m_AlertLevel;
     private SphereCollider m_Collider;
 
+
     private void Awake()
     {
         m_EnemyAI = GetComponent<EnemyAI>();
