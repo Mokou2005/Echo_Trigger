@@ -34,7 +34,7 @@ public class Bite : MonoBehaviour
         m_Animator = GetComponent<Animator>();
         m_DogSound = GetComponent<DogSound>();
         m_agent = GetComponent<NavMeshAgent>();
-        Transform found = null;
+       Transform found = null;
         foreach (Transform D in transform)
         {
             if (D.name == "BitePoint")

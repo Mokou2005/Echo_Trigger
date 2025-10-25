@@ -33,11 +33,12 @@ public class AlertLevel : MonoBehaviour
 
     public void IncreaseVigilance()
     {
+        Debug.Log(111);
         //Œ»Ý‚ÌŒx‰ú“x‚ð‘‰Á
         m_currentLevel += m_increaseRate * Time.deltaTime;
         //Œx‰ú“x‚ÌãŒÀ‚Æ‰ºŒÀ‚ðÝ’è
         m_currentLevel = Mathf.Clamp(m_currentLevel, 0, m_maxLevel);
-        //Debug.Log($"Œx‰ú“xã¸’†: {m_currentLevel:F1}/{m_maxLevel}");
+        Debug.Log($"Œx‰ú“xã¸’†: {m_currentLevel:F1}/{m_maxLevel}");
         //ƒŒƒxƒ‹ƒ}ƒbƒNƒX‚æ‚èã‰ñ‚Á‚½‚çUŒ‚ó‘Ô‚Ö
         if (m_autoAlert && m_currentLevel >= m_maxLevel)
         {

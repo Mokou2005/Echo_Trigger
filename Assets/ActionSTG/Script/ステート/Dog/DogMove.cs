@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using static Cinemachine.DocumentationSortingAttribute;
 
 namespace StateMachineAI
 {
@@ -12,8 +13,11 @@ namespace StateMachineAI
         {
             //移動scriptを導入
             EnemyPatrol_Waypoint col = owner.GetComponent<EnemyPatrol_Waypoint>();
+            //センサーを導入
             Sensor Sen = owner.GetComponent<Sensor>();
-            AlertLevel level=owner.GetComponent<AlertLevel>();
+            //警戒度を導入
+            AlertLevel level = owner.GetComponent<AlertLevel>();
+
             if (Sen == null)
             {
                 Debug.Log("Sensorがなかったので自動追加します。");
@@ -24,12 +28,13 @@ namespace StateMachineAI
                 Debug.Log("EnemyPatrol_Waypointがなかったので自動追加します。");
                 col = owner.gameObject.AddComponent<EnemyPatrol_Waypoint>();
             }
-            if (level==null)
+            if (level == null)
             {
                 Debug.Log("AlertLevelがなかったので自動追加します。");
                 level = owner.gameObject.AddComponent<AlertLevel>();
             }
-            
+
+
         }
 
         public override void Stay()
