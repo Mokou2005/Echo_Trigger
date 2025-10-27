@@ -4,11 +4,11 @@ using UnityEngine.AI;
 
 public class Bite : MonoBehaviour
 {
-    public Animator m_Animator;
-    public DogSound m_DogSound;
-    public NavMeshAgent m_agent;
-    public Transform m_BitePoint;
-    public GameObject m_BitePrefab;
+    [SerializeField]private Animator m_Animator;
+    [SerializeField] private DogSound m_DogSound;
+    [SerializeField] private NavMeshAgent m_agent;
+    [SerializeField] private Transform m_BitePoint;
+    [SerializeField] private GameObject m_BitePrefab;
     // ƒvƒŒƒCƒ„[‚ÌTransform‚ğ•Û
     public Transform m_Target;
     public float m_Count=0;

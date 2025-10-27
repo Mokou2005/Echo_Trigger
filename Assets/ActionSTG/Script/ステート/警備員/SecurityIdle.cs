@@ -9,7 +9,7 @@ namespace StateMachineAI
         public SecurityIdle(EnemyAI owner) : base(owner) { }
         public override void Enter()
         {
-
+            owner.ChangeState(AIState.Move);
         }
 
         public override void Stay()
