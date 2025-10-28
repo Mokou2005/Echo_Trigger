@@ -13,18 +13,6 @@ namespace StateMachineAI
     public class EnemyAI : StatefulObjectBase<EnemyAI, AIState>
     {
         public Transform m_Player;
-        [Header("呼ぶ敵")]
-        public Transform m_EnemyCall;
-        [Header("出現させたい敵のPrefab")]
-        public GameObject enemyPrefab;
-        [Header("出現位置")]
-        public Transform spawnPoint;
-        [Header("会社員の位置")]
-        public Transform m_suitEnemy;
-        [Header("感知距離")]
-        public float m_viewDistance = 10f;
-        [Header("視野角（左右）")]
-        public float m_viewAngle = 60f;
         public Animator m_Animator;
 
         public Respon m_RSP;
@@ -114,29 +102,7 @@ namespace StateMachineAI
                 return false;
             }
         }
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = new Color(1, 0, 0, 0.2f); // 赤の半透明
-
-
-
-            // 視野角の線を描く
-            Vector3 forward = transform.forward;
-
-            // 視野角の左右の方向を計算
-            Quaternion leftRayRotation = Quaternion.Euler(0, -m_viewAngle * 0.5f, 0);
-            Quaternion rightRayRotation = Quaternion.Euler(0, m_viewAngle * 0.5f, 0);
-
-
-            Vector3 leftRayDirection = leftRayRotation * forward;
-            Vector3 rightRayDirection = rightRayRotation * forward;
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, transform.position + leftRayDirection * m_viewDistance);
-            Gizmos.DrawLine(transform.position, transform.position + rightRayDirection * m_viewDistance);
-
-
-        }
+     
     }
 }
 

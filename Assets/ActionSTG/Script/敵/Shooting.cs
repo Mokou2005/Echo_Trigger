@@ -7,7 +7,7 @@ public class Shooting : MonoBehaviour
     [Header("Playerの位置")]
     [SerializeField] private Transform m_Target;
     [Header("外す位置（弾）")]
-    //[SerializeField] private Transform[] m_RemoveBullet;
+    [SerializeField] private Transform[] m_RemoveBullet;
     [Header("Playに当たる確率")]
     [SerializeField] private float m_BulletProbability = 0.8f;
     [Header("射程距離を保つ距離")]
@@ -18,6 +18,8 @@ public class Shooting : MonoBehaviour
     [SerializeField] private float m_ShootInterval = 0.5f;
     [SerializeField] private NavMeshAgent m_agent;
     [SerializeField] private Animator m_Animator;
+    [Header("銃（AssaultRifle）")]
+    [SerializeField] private AssaultRifle m_Rifle; 
     //射程距離に入ったかどうか
     private bool m_ShootAria = false;
     //撃った回数
@@ -32,6 +34,10 @@ public class Shooting : MonoBehaviour
     {
         m_Animator = GetComponent<Animator>();
         m_agent = GetComponent<NavMeshAgent>();
+        if (m_Rifle==null)
+        {
+            m_Rifle = GetComponentInChildren<AssaultRifle>();
+        }
         // Tagからプレイヤーを自動で探す
         if (m_Target == null)
         {
@@ -69,7 +75,10 @@ public class Shooting : MonoBehaviour
             // 射程内：距離を保つ
             m_agent.enabled = true;
             m_agent.speed = m_MoveSpeed;
-
+            Vector3 lookPos = m_Target.position - transform.position;
+            lookPos.y = 0;
+            Quaternion rotation = Quaternion.LookRotation(lookPos);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 5f);
             if (distance < m_CombatDistance - 1f)
             {
                 // 距離を保って攻撃
@@ -92,7 +101,8 @@ public class Shooting : MonoBehaviour
                         // 攻撃アニメ再生
                         m_Animator.SetTrigger("Attack");
                         m_Count++;
-                        Debug.Log($"撃った回数: {m_Count:F1}");
+                        Shot();
+                     
                        
                     }
                     else
@@ -115,7 +125,18 @@ public class Shooting : MonoBehaviour
             }
         }
     }
-
+    private void Shot()
+    {
+        if (m_Rifle != null)
+        {
+            m_Rifle.Shot(); // ← AssaultRifle の発射関数を呼ぶ！
+            Debug.Log("弾を発射しました！");
+        }
+        else
+        {
+            Debug.LogWarning("AssaultRifle が設定されていません！");
+        }
+    }
     // リロード完了時に呼ばれる
     private void EndReload()
     {
