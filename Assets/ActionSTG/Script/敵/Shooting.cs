@@ -14,11 +14,19 @@ public class Shooting : MonoBehaviour
     [SerializeField] private float m_CombatDistance = 5f;
     [Header("射程距離内での移動速度")]
     [SerializeField] private float m_MoveSpeed = 2f;
+    [Header("攻撃間隔（秒）")]
+    [SerializeField] private float m_ShootInterval = 0.5f;
     [SerializeField] private NavMeshAgent m_agent;
     [SerializeField] private Animator m_Animator;
     //射程距離に入ったかどうか
     private bool m_ShootAria = false;
-    private int m_Count;
+    //撃った回数
+    private int m_Count=0;
+    //攻撃の間を図るタイマー
+    private float m_ShootTimer=0f;
+    //リロードしてるかどうか
+    private bool m_IsReloading=false;
+
 
     void Start()
     {
@@ -44,63 +52,75 @@ public class Shooting : MonoBehaviour
     {
 
 
-        // ターゲットが未設定なら、プレイヤーを探す
-        if (m_Target == null)
-        {
-            GameObject player = GameObject.FindWithTag("Player");
-            if (player != null)
-                m_Target = player.transform;
-        }
-        //ターゲットがないなら返す
-        if (m_Target == null)
-        {
-            Debug.LogError("ターゲットがありません"); return;
-        }
-        //自分のポジションと敵のポジションの間を図る
+        if (m_Target == null) return;
+
         float distance = Vector3.Distance(transform.position, m_Target.position);
 
-        //射程距離に入ってなければ
         if (!m_ShootAria)
         {
-            //射程外なので接近
+            // 射程外なので接近
             m_Animator.SetBool("Run", true);
             m_agent.enabled = true;
             m_agent.speed = 3.5f;
-            //プレイヤーの方向まで移動
             m_agent.SetDestination(m_Target.position);
         }
-        //射程距離に入ったら
         else
         {
-            //射程内なので一定の距離を保つ
-            m_Animator.SetBool("Run", true);
+            // 射程内：距離を保つ
             m_agent.enabled = true;
-            //速度を射程内の時移動速度に変更
             m_agent.speed = m_MoveSpeed;
-            // 距離が近すぎる場合少し離れる
+
             if (distance < m_CombatDistance - 1f)
             {
-                Vector3 dirAway = (transform.position - m_Target.position).normalized;
-                Vector3 newPos = transform.position + dirAway * 2f; // 少し後退
-                m_agent.SetDestination(newPos);
-            }
-            // 距離が遠すぎる場合近づく
-            else if (distance > m_CombatDistance + 1f)
-            {
-                m_agent.SetDestination(m_Target.position);
-            }
-            else
-            {
-                // ちょうどいい距離 → 立ち止まって攻撃待機
+                // 距離を保って攻撃
                 m_agent.SetDestination(transform.position);
                 m_Animator.SetBool("Run", false);
-                // 攻撃アニメなどここで
-                // m_Animator.SetTrigger("Shoot");
-            }
 
+                // リロード中は攻撃しない
+                if (m_IsReloading) return;
+
+                // 一定間隔ごとに攻撃
+                m_ShootTimer += Time.deltaTime;
+                if (m_ShootTimer >= m_ShootInterval)
+                {
+                    m_ShootTimer = 0f;
+                    
+
+                    if (m_Count< 5)
+                    {
+                        m_agent.enabled = false;
+                        // 攻撃アニメ再生
+                        m_Animator.SetTrigger("Attack");
+                        m_Count++;
+                        Debug.Log($"撃った回数: {m_Count:F1}");
+                       
+                    }
+                    else
+                    {
+                        m_agent.enabled = false;
+                        // リロード開始
+                        m_Animator.SetTrigger("Reload");
+                        m_IsReloading = true;
+                        m_Count = 0;
+                        // リロード時間後に解除
+                        Invoke(nameof(EndReload), 2f); // ← 2秒後にリロード完了
+                    }
+                }
+            }
+            else if (distance > m_CombatDistance + 1f)
+            {
+                // 射程外 → 近づく
+                m_Animator.SetBool("Run", true);
+                m_agent.SetDestination(m_Target.position);
+            }
         }
     }
 
+    // リロード完了時に呼ばれる
+    private void EndReload()
+    {
+        m_IsReloading = false;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
