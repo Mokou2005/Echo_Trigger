@@ -1,13 +1,13 @@
-using StateMachineAI;
+ï»¿using StateMachineAI;
 using UnityEngine;
 
 public class Sensor : MonoBehaviour
 {
-    [Header("ŒŸ’m‚·‚é‘ÎÛ")]
+    [Header("æ¤œçŸ¥ã™ã‚‹å¯¾è±¡")]
     public string m_targetTag = "Player";
-    [Header("Š´’m‹——£")]
+    [Header("æ„ŸçŸ¥è·é›¢")]
     public float m_viewDistance = 10f;
-    [Header("‹–ìŠpi¶‰Ej")]
+    [Header("è¦–é‡è§’ï¼ˆå·¦å³ï¼‰")]
     public float m_viewAngle = 60f;
 
     public bool m_Look;
@@ -41,22 +41,28 @@ public class Sensor : MonoBehaviour
         Vector3 dirToTarget = (m_Target.position - transform.position).normalized;
         float distance = Vector3.Distance(transform.position, m_Target.position);
 
-        // ‚‚³·‚ğ’Ç‰Á
         float heightDifference = Mathf.Abs(m_Target.position.y - transform.position.y);
-        float maxHeightDifference = 2f; // ‚‚³‚ÌÅ‘å·i•K—v‚É‰‚¶‚Ä’²®j
+        float maxHeightDifference = 2f;
 
         float dot = Vector3.Dot(transform.forward, dirToTarget);
         float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
 
+        // è¦–é‡è§’ï¼†è·é›¢ï¼†é«˜ã•ãƒã‚§ãƒƒã‚¯
         if (angle < m_viewAngle * 0.5f && distance < m_viewDistance && heightDifference <= maxHeightDifference)
         {
-            m_Look = true;
-            m_EnemyAI.ChangeState(AIState.Search);
+            // è¦–ç•Œã«é®è”½ç‰©ãŒãªã„ã“ã¨ã‚’ãƒã‚§ãƒƒã‚¯
+            if (Physics.Raycast(transform.position, dirToTarget, out RaycastHit hit, distance))
+            {
+                if (hit.collider.CompareTag(m_targetTag))
+                {
+                    m_Look = true;
+                    m_EnemyAI.ChangeState(AIState.Search);
+                    return;
+                }
+            }
         }
-        else
-        {
-            m_Look = false;
-        }
+
+        m_Look = false;
     }
 
     private void OnDrawGizmosSelected()
