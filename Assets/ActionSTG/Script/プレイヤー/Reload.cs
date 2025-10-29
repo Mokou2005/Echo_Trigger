@@ -12,6 +12,7 @@ public class Reload : MonoBehaviour
     public static int m_GunBullet;
     //scriptÇÃPlayerAttackÇéQè∆
     private PlayerAttack m_PlayerAttack;
+    private bool m_Reload=false;
     private void Start()
     {
         m_ReloadAnimator = GetComponent<Animator>();
@@ -21,11 +22,12 @@ public class Reload : MonoBehaviour
     }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R)&&!m_Reload)
         {
             m_ReloadAnimator.SetBool("Reload", true);
             m_Sound.PlayOneShot(m_ReloadSound);
             m_Reloading = true;
+            m_Reload = true;
             GunReload();
         }
 
@@ -35,6 +37,7 @@ public class Reload : MonoBehaviour
     {
         m_ReloadAnimator.SetBool("Reload", false);
         m_Reloading=false;
+        m_Reload=false;
     }
     void GunReload()
     {

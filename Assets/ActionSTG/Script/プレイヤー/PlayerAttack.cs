@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.ParticleSystemJobs;
+using UnityEngine.UI;
 
 
 public class PlayerAttack : MonoBehaviour
@@ -19,6 +20,8 @@ public class PlayerAttack : MonoBehaviour
     public int m_BulletCount;
     [Header("初期弾数(リロード数)")]
     public int m_InitialBulletCount;
+    [Header("標準をUIに")]
+    public Image m_image;
     //撃つアニメーション
     private Animator m_animator;
     //効果音
@@ -35,6 +38,7 @@ public class PlayerAttack : MonoBehaviour
     }
 
     // Update is called once per frame
+    [System.Obsolete]
     void Update()
     {
 
@@ -57,40 +61,56 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
+    [System.Obsolete]
     void Shoot()
     {
-        //m_Countが0なら撃つのをやめる（弾がなくなったら)
         --m_BulletCount;
-        if (m_BulletCount > -1)
+        if (m_BulletCount < 0) return;
+
+        // エフェクト
+        if (m_effect != null)
         {
-            //弾のエフェクト
-            if (m_effect != null)
-            {
-                m_effect.GetComponent<ParticleSystem>().Stop();
-                m_effect.GetComponent<ParticleSystem>().Play();
-            }
-
-            //弾作成
-            GameObject bullet = Instantiate(m_bulletPrefab, m_Gun.position, m_Gun.rotation);
-            // 前方に飛ばす
-            Rigidbody rb = bullet.GetComponent<Rigidbody>();
-            //弾にDamegeSystemスクリプトがついていたら
-            if (bullet.GetComponent<DamegeSystem>())
-            {
-               //誰が撃ったかパラメータで確認（味方同士がダメージを食らわないため）
-                bullet.GetComponent<DamegeSystem>().m_Parameta = GetComponent<Parameta>();
-
-            }
-            if (rb != null)
-            {
-                //弾を正面に真っすぐ飛ばす（AddForceは力を加える）
-                rb.AddForce(m_Gun.forward * bulletSpeed);
-            }
-
-            //五秒後に消える
-            Destroy(bullet, 5.0f);
-
+            m_effect.GetComponent<ParticleSystem>().Stop();
+            m_effect.GetComponent<ParticleSystem>().Play();
         }
+
+        // Ray発射（画面中心 or クロスヘアUI位置）
+        Vector3 screenPoint = new Vector3(Screen.width / 2f, Screen.height / 2f);
+        if (m_image != null) screenPoint = m_image.rectTransform.position;
+
+        Ray ray = Camera.main.ScreenPointToRay(screenPoint);
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 200f))
+        {
+            // 敵や壁の表面に向けて撃つ
+            targetPoint = hitInfo.point;
+        }
+        else
+        {
+            // 遠くの仮ターゲットに向けて撃つ
+            targetPoint = ray.origin + ray.direction * 200f;
+        }
+
+        // 弾生成
+        GameObject bullet = Instantiate(m_bulletPrefab, m_Gun.position, Quaternion.identity);
+
+        // ターゲットへ真っすぐ飛ばす
+        Vector3 shootDirection = (targetPoint - m_Gun.position).normalized;
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = shootDirection * bulletSpeed; // VelocityChangeより安定
+        }
+
+        // ダメージ設定
+        DamegeSystem dmg = bullet.GetComponent<DamegeSystem>();
+        if (dmg != null)
+            dmg.m_Parameta = GetComponent<Parameta>();
+
+        Destroy(bullet, 5f);
+
     }
+    
 }
 

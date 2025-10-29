@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.AudioSettings;
 
 public class Shooting : MonoBehaviour
 {
@@ -19,117 +18,96 @@ public class Shooting : MonoBehaviour
     [SerializeField] private NavMeshAgent m_agent;
     [SerializeField] private Animator m_Animator;
     [Header("銃（AssaultRifle）")]
-    [SerializeField] private AssaultRifle m_Rifle; 
-    //射程距離に入ったかどうか
-    private bool m_ShootAria = false;
-    //撃った回数
-    private int m_Count=0;
-    //攻撃の間を図るタイマー
-    private float m_ShootTimer=0f;
-    //リロードしてるかどうか
-    private bool m_IsReloading=false;
+    [SerializeField] private AssaultRifle m_Rifle;
 
+    private bool m_IsReloading = false;
+    private int m_Count = 0;
+    private float m_ShootTimer = 0f;
 
     void Start()
     {
         m_Animator = GetComponent<Animator>();
         m_agent = GetComponent<NavMeshAgent>();
-        if (m_Rifle==null)
-        {
+
+        if (m_Rifle == null)
             m_Rifle = GetComponentInChildren<AssaultRifle>();
-        }
-        // Tagからプレイヤーを自動で探す
+
         if (m_Target == null)
         {
             GameObject player = GameObject.FindWithTag("Player");
-            if (player != null)
-            {
-                m_Target = player.transform;
-            }
-            else
-            {
-                Debug.LogWarning("Playerタグのオブジェクトが見つかりません！");
-            }
+            if (player != null) m_Target = player.transform;
+            else Debug.LogWarning("Playerタグのオブジェクトが見つかりません！");
         }
     }
 
-
     void Update()
     {
-
-
         if (m_Target == null) return;
 
         float distance = Vector3.Distance(transform.position, m_Target.position);
+        bool inCombatRange = distance <= m_CombatDistance + 1f; // 射程圏内か判定
 
-        if (!m_ShootAria)
+        if (!inCombatRange)
         {
-            // 射程外なので接近
+            // 射程外 → 接近
             m_Animator.SetBool("Run", true);
             m_agent.enabled = true;
             m_agent.speed = 3.5f;
             m_agent.SetDestination(m_Target.position);
+            return;
         }
-        else
+
+        // 射程内：距離を保ちながら攻撃
+        m_agent.enabled = true;
+        m_agent.speed = m_MoveSpeed;
+
+        Vector3 lookPos = m_Target.position - transform.position;
+        lookPos.y = 0;
+        Quaternion rotation = Quaternion.LookRotation(lookPos);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 5f);
+
+        if (distance < m_CombatDistance - 1f)
         {
-            // 射程内：距離を保つ
-            m_agent.enabled = true;
-            m_agent.speed = m_MoveSpeed;
-            Vector3 lookPos = m_Target.position - transform.position;
-            lookPos.y = 0;
-            Quaternion rotation = Quaternion.LookRotation(lookPos);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 5f);
-            if (distance < m_CombatDistance - 1f)
+            m_agent.SetDestination(transform.position);
+            m_Animator.SetBool("Run", false);
+
+            if (m_IsReloading) return;
+
+            m_ShootTimer += Time.deltaTime;
+            if (m_ShootTimer >= m_ShootInterval)
             {
-                // 距離を保って攻撃
-                m_agent.SetDestination(transform.position);
-                m_Animator.SetBool("Run", false);
+                m_ShootTimer = 0f;
 
-                // リロード中は攻撃しない
-                if (m_IsReloading) return;
-
-                // 一定間隔ごとに攻撃
-                m_ShootTimer += Time.deltaTime;
-                if (m_ShootTimer >= m_ShootInterval)
+                if (m_Count < 5)
                 {
-                    m_ShootTimer = 0f;
-                    
-
-                    if (m_Count< 5)
-                    {
-                        m_agent.enabled = false;
-                        // 攻撃アニメ再生
-                        m_Animator.SetTrigger("Attack");
-                        m_Count++;
-                        Shot();
-                     
-                       
-                    }
-                    else
-                    {
-                        m_agent.enabled = false;
-                        // リロード開始
-                        m_Animator.SetTrigger("Reload");
-                        m_IsReloading = true;
-                        m_Count = 0;
-                        // リロード時間後に解除
-                        Invoke(nameof(EndReload), 2f); // ← 2秒後にリロード完了
-                    }
+                    m_agent.enabled = false;
+                    m_Animator.SetTrigger("Attack");
+                    m_Count++;
+                    Shot();
+                }
+                else
+                {
+                    m_agent.enabled = false;
+                    m_Animator.SetTrigger("Reload");
+                    m_IsReloading = true;
+                    m_Count = 0;
+                    Invoke(nameof(EndReload), 2f);
                 }
             }
-            else if (distance > m_CombatDistance + 1f)
-            {
-                // 射程外 → 近づく
-                m_Animator.SetBool("Run", true);
-                m_agent.SetDestination(m_Target.position);
-            }
+        }
+        else if (distance > m_CombatDistance + 1f)
+        {
+            // 射程外 → 接近
+            m_Animator.SetBool("Run", true);
+            m_agent.SetDestination(m_Target.position);
         }
     }
+
     private void Shot()
     {
         if (m_Rifle != null)
         {
-            m_Rifle.Shot(); // ← AssaultRifle の発射関数を呼ぶ！
+            m_Rifle.Shot();
             Debug.Log("弾を発射しました！");
         }
         else
@@ -137,25 +115,9 @@ public class Shooting : MonoBehaviour
             Debug.LogWarning("AssaultRifle が設定されていません！");
         }
     }
-    // リロード完了時に呼ばれる
+
     private void EndReload()
     {
         m_IsReloading = false;
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            //エリアに入った
-            m_ShootAria = true;
-        }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            // 射程外に出た
-            m_ShootAria = false;
-        }
     }
 }

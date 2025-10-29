@@ -2,7 +2,7 @@
 
 public class Call : MonoBehaviour
 {
-    [Header("非表示→表示にする敵をここに登録（自動で探します）")]
+    [Header("非表示→表示にする敵をここに登録")]
     public GameObject m_EnemySpon;   // シーン上の敵オブジェクト
     private Animator m_Animator;
 

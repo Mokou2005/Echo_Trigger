@@ -112,7 +112,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5242a1407fd09f04a94bfb9a62fb7025,
         type: 3}
       propertyPath: m_Name
-      value: "\u9283"
+      value: "\u30A2\u30B5\u30EB\u30C8\u30E9\u30A4\u30D5\u30EB"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -171,9 +171,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d2d68c5f7e1b7646a87fb621c012585, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TargetGun: {fileID: 0}
+  m_RemoveGun: {fileID: 0}
   m_Gun: {fileID: 715623459789755538}
+  m_Probability: 0.8
   m_bulletPrefab: {fileID: 6255481634908385297, guid: 4dfd3c0387b611b4684b75b8a82be224,
     type: 3}
-  m_BulletSpeed: 2000
+  m_BulletSpeed: 10
   m_sound: {fileID: 8300000, guid: 4a6d190a8e62c47e79779e108add4d5b, type: 3}
   m_Owner: {fileID: 0}

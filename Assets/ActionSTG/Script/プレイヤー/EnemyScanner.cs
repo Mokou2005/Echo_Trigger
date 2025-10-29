@@ -3,13 +3,13 @@ using System.Collections;
 
 public class EnemyScanner : MonoBehaviour
 {
-    public Material scanMat;
-    public float speed = 10f;
-    private bool isScanning = false;
+    public Material m_scanMat;
+    public float m_speed = 10f;
+    private bool m_isScanning = false;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isScanning)
+        if (Input.GetKeyDown(KeyCode.Space) && !m_isScanning)
         {
             StartCoroutine(Scan());
         }
@@ -17,19 +17,19 @@ public class EnemyScanner : MonoBehaviour
 
     IEnumerator Scan()
     {
-        isScanning = true;
-        scanMat.SetFloat("_Scan", 1);
-        scanMat.SetFloat("_ScanRadius", 0);  // ← リセット追加
+        m_isScanning = true;
+        m_scanMat.SetFloat("_Scan", 1);
+        m_scanMat.SetFloat("_ScanRadius", 0);  // ← リセット追加
 
         float radius = 0f;
         while (radius < 100f)
         {
-            radius += Time.deltaTime * speed;
-            scanMat.SetFloat("_ScanRadius", radius);
+            radius += Time.deltaTime * m_speed;
+            m_scanMat.SetFloat("_ScanRadius", radius);
             yield return null;
         }
 
-        scanMat.SetFloat("_Scan", 0);
-        isScanning = false;
+        m_scanMat.SetFloat("_Scan", 0);
+        m_isScanning = false;
     }
 }

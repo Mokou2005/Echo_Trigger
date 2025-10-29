@@ -75,7 +75,7 @@ Material:
     - _Parallax: 0.02
     - _Scan: 1
     - _ScanFadeTime: 3
-    - _ScanRadius: 22.672693
+    - _ScanRadius: 28.422234
     - _ScanWidth: 2
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
