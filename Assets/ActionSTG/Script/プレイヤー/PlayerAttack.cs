@@ -23,9 +23,9 @@ public class PlayerAttack : MonoBehaviour
     [Header("標準をUIに")]
     public Image m_image;
     //撃つアニメーション
-    private Animator m_animator;
+    [SerializeField]private Animator m_animator;
     //効果音
-    private AudioSource m_audioSource;
+    [SerializeField] private AudioSource m_audioSource;
 
     void Start()
     {
@@ -64,6 +64,7 @@ public class PlayerAttack : MonoBehaviour
     [System.Obsolete]
     void Shoot()
     {
+        //弾のカウントがゼロになったら撃てなくする
         --m_BulletCount;
         if (m_BulletCount < 0) return;
 
@@ -74,10 +75,10 @@ public class PlayerAttack : MonoBehaviour
             m_effect.GetComponent<ParticleSystem>().Play();
         }
 
-        // Ray発射（画面中心 or クロスヘアUI位置）
+        //スクリーンの横と縦を÷２してクロスヘアに合わせる
         Vector3 screenPoint = new Vector3(Screen.width / 2f, Screen.height / 2f);
+        //クロスヘアがnullじゃなかったらクロスヘアの座標を取得
         if (m_image != null) screenPoint = m_image.rectTransform.position;
-
         Ray ray = Camera.main.ScreenPointToRay(screenPoint);
         Vector3 targetPoint;
 
@@ -107,7 +108,7 @@ public class PlayerAttack : MonoBehaviour
         DamegeSystem dmg = bullet.GetComponent<DamegeSystem>();
         if (dmg != null)
             dmg.m_Parameta = GetComponent<Parameta>();
-
+        //五秒後弾を消す
         Destroy(bullet, 5f);
 
     }

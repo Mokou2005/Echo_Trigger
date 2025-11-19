@@ -3,18 +3,19 @@
 public class Call : MonoBehaviour
 {
     [Header("非表示→表示にする敵をここに登録")]
-    public GameObject m_EnemySpon;   // シーン上の敵オブジェクト
-    private Animator m_Animator;
+    public GameObject m_EnemySpon;  
+   [SerializeField] private Animator m_Animator;
 
     private void Awake()
     {
         // Inspector で未設定の場合、自動検索
         if (m_EnemySpon == null)
         {
-            // 🔹 非アクティブも含めてシーン内から検索
+            //非アクティブも含めてシーン内から検索
             GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
             foreach (var obj in allObjects)
             {
+                //スポーン地点Callを探す
                 if (obj.name == "スポーン地点Call" && obj.scene.isLoaded)
                 {
                     m_EnemySpon = obj;
