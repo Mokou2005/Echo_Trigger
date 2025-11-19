@@ -9,6 +9,7 @@ public class Sensor : MonoBehaviour
     public float m_viewDistance = 10f;
     [Header("視野角（左右）")]
     public float m_viewAngle = 90f;
+    public float m_LastDistance { get; private set; }
     //プレイヤーを見たかどうか
     public bool m_Look;
     [SerializeField] private EnemyAI m_EnemyAI;
@@ -45,6 +46,7 @@ public class Sensor : MonoBehaviour
         Vector3 dirToTarget = (m_Target.position - transform.position).normalized;
         //ターゲットまでの距離を取得
         float distance = Vector3.Distance(transform.position, m_Target.position);
+        m_LastDistance = distance;
         //センサーの高さを2mに調整
         float heightDifference = Mathf.Abs(m_Target.position.y - transform.position.y);
         float maxHeightDifference = 2f;
@@ -63,6 +65,8 @@ public class Sensor : MonoBehaviour
                 if (hit.collider.CompareTag(m_targetTag))
                 {
                     m_Look = true;
+                    //距離をAlertLevelに渡す
+                    m_LastDistance = distance;
                     m_EnemyAI.ChangeState(AIState.Search);
                     return;
                 }

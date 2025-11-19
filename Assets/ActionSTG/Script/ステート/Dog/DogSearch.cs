@@ -23,7 +23,7 @@ namespace StateMachineAI
             if (m_Sensor.m_Look == true)
             {
                 owner.m_Animator.SetBool("Search", true);
-                m_AlertLevel?.IncreaseVigilance();
+                m_AlertLevel?.IncreaseVigilance(m_Sensor.m_LastDistance);
             }
   
             if (m_Sensor.m_Look == false)

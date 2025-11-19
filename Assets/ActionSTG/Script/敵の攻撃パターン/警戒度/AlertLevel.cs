@@ -5,7 +5,7 @@ public class AlertLevel : MonoBehaviour
 {
 
     [Header("Œx‰ú“x‚Ìã¸‘¬“x(1•b‚ ‚½‚è)")]
-    public float m_increaseRate = 30f;
+    public float m_increaseRate = 60f;
 
     [Header("Œx‰ú“x‚ÌŒ¸­‘¬“x(1•b‚ ‚½‚è)")]
     public float m_decreaseRate = 5f;
@@ -30,19 +30,23 @@ public class AlertLevel : MonoBehaviour
         enemyAI = GetComponent<EnemyAI>();
     }
 
-
-    public void IncreaseVigilance()
+    //distance‚Í“G‚ÆƒvƒŒƒCƒ„[‚Ì‹——£iSensor‚Ìscriptp‚Éˆø‚«Œp‚¢‚Å‚Ü‚·j
+    public void IncreaseVigilance(float distance)
     {
-        Debug.Log(111);
-        //Œ»İ‚ÌŒx‰ú“x‚ğ‘‰Á
-        m_currentLevel += m_increaseRate * Time.deltaTime;
+        //‹——£‚ª‹ß‚¢‚Ù‚Ç‹}ã¸‚³‚¹‚é
+        float k = 0.1f;
+        float factor = Mathf.Exp(-distance * k);
+        // ã¸‘¬“x‚ğ‹——£ŒW”‚Å’²®
+        float rate = m_increaseRate * factor;
+        m_currentLevel += rate * Time.deltaTime;
         //Œx‰ú“x‚ÌãŒÀ‚Æ‰ºŒÀ‚ğİ’è
         m_currentLevel = Mathf.Clamp(m_currentLevel, 0, m_maxLevel);
         Debug.Log($"Œx‰ú“xã¸’†: {m_currentLevel:F1}/{m_maxLevel}");
-        //ƒŒƒxƒ‹ƒ}ƒbƒNƒX‚æ‚èã‰ñ‚Á‚½‚çUŒ‚ó‘Ô‚Ö
+        // Œx‰ú“xMAX‚È‚çUŒ‚ƒ‚[ƒh‚Ö
         if (m_autoAlert && m_currentLevel >= m_maxLevel)
         {
             Debug.Log("Œx‰ú“xMAX ¨ UŒ‚ƒ‚[ƒh‚Ö");
+            //UŒ‚ƒ‚[ƒh‚É“ü‚é
             m_AttackMode = true;
             if (enemyAI != null)
                 enemyAI.ChangeState(AIState.Attack);
@@ -59,7 +63,7 @@ public class AlertLevel : MonoBehaviour
         Debug.Log($"Œx‰ú“xã¸’†: {m_currentLevel:F1}/{m_maxLevel}");
     }
 
-    //Œx‰ú“x‚ªMax‚É’B‚µ‚½‚çture‚ğ•Ô‚·
+    //Œx‰ú“xMAX”»’è
     public bool IsMax() => m_currentLevel >= m_maxLevel;
 }
 
