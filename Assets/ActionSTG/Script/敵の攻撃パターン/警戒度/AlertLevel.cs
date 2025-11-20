@@ -5,7 +5,7 @@ public class AlertLevel : MonoBehaviour
 {
 
     [Header("Œx‰ú“x‚Ìã¸‘¬“x(1•b‚ ‚½‚è)")]
-    public float m_increaseRate = 60f;
+    public float m_increaseRate = 90f;
 
     [Header("Œx‰ú“x‚ÌŒ¸­‘¬“x(1•b‚ ‚½‚è)")]
     public float m_decreaseRate = 5f;

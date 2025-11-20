@@ -29,6 +29,10 @@ public class Respon : MonoBehaviour
         SetUp();
 
     }
+    public void Update()
+    {
+        
+    }
     public void SetUp()
     {
         GameObject D = Instantiate(m_Body, transform.position, transform.rotation);
@@ -40,6 +44,13 @@ public class Respon : MonoBehaviour
         }
         EA.m_RSP = this;
         EA.m_Player = m_Player;
+        //生成された敵にEnemyPatrol_Waypointがついてるか調べ、ついていなければ追加
+        EnemyPatrol_Waypoint patrol = D.GetComponent<EnemyPatrol_Waypoint>();
+        if (patrol == null)
+        {
+            patrol = D.AddComponent<EnemyPatrol_Waypoint>();
+        }
+        patrol.SetRespon(this);
         //指定したタイプのリストがない場合通知する
         if (m_Ainame[m_UnitType].AIName.Count == 0)
         {
