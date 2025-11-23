@@ -22,6 +22,8 @@ public class PlayerAttack : MonoBehaviour
     public int m_InitialBulletCount;
     [Header("標準をUIに")]
     public Image m_image;
+    [Header("自動throwのscriptをアタッチ")]
+    [SerializeField] private Throw m_throw;
     //撃つアニメーション
     [SerializeField]private Animator m_animator;
     //効果音
@@ -35,14 +37,22 @@ public class PlayerAttack : MonoBehaviour
         //開始時は非表示
         if (m_effect != null)
             m_effect.gameObject.SetActive(false);
+        if (m_throw==null)
+        {
+           m_throw=GetComponent<Throw>();
+            if (m_throw==null)
+            {
+                Debug.LogError("Throwのscriptが入っていません。");
+            }
+        }
     }
 
     // Update is called once per frame
     [System.Obsolete]
     void Update()
     {
-
-        if (Input.GetMouseButtonUp(0) )
+        //投げる構えをしていなくマウスを押したら発射
+        if (Input.GetMouseButtonUp(0)&&!m_throw.m_IsThrow )
         {
             if (m_BulletCount > 0)
             {

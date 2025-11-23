@@ -54,9 +54,6 @@ public class Playercontroller : MonoBehaviour
         //しゃがみ中は移動禁止
         if (Crouching.m_Crouching)
             return;
-        //リロード中は移動禁止
-        if (Reload.m_Reloading)
-            return;
         //噛まれているときは移動禁止
         if (Bite.m_BiteOut)
             return;
