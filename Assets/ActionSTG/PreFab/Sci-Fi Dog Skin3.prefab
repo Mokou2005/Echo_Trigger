@@ -166,8 +166,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d13700fe717bf3e40b7870e52a6ee6e2,
         type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d13700fe717bf3e40b7870e52a6ee6e2,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d13700fe717bf3e40b7870e52a6ee6e2,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -273,12 +283,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Player: {fileID: 0}
-  m_EnemyCall: {fileID: 0}
-  enemyPrefab: {fileID: 0}
-  spawnPoint: {fileID: 0}
-  m_suitEnemy: {fileID: 0}
-  m_viewDistance: 10
-  m_viewAngle: 60
   m_Animator: {fileID: 0}
   m_RSP: {fileID: 0}
   m_StartFlag: 0

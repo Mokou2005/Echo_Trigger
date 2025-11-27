@@ -91,6 +91,15 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
         m_currentIndex = (m_currentIndex + 1) % m_Manager.m_Waypoints.Length;
     }
 
+    public void OnDetectStone(Vector3 stonePos)
+    {
+        //攻撃中など
+        if (m_agent.enabled == false) return; 
+
+        m_agent.SetDestination(stonePos);
+        //パトロール再開時に最初から
+        m_currentIndex = 0; 
+    }
     public void SetRespon(Respon respon)
     {
         m_Respon = respon;
@@ -118,6 +127,6 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
         }
         return closest;
     }
-
+   
 
 }

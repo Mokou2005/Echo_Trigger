@@ -19,6 +19,7 @@ public class Throw : MonoBehaviour
     //手に持っている石を保存
     private GameObject m_HoldingStone = null;
 
+
     private void Start()
     {
         if (m_ItemCount == null)
@@ -127,6 +128,8 @@ public class Throw : MonoBehaviour
         {
             Debug.LogError("石にRigidbodyがついてません。");
         }
+        //投げた後７秒後消す
+        Destroy(m_HoldingStone, 7f);
         // 投げたので手の石をリセット
         m_HoldingStone = null;
     }

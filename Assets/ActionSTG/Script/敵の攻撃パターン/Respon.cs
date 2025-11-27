@@ -6,6 +6,8 @@ using UnityEngine.Rendering.Universal;
 
 public class Respon : MonoBehaviour
 {
+    public MasterEnemySystem m_MES;
+
     [Header("敵のタイプの変更")]
     public int m_UnitType = 0;
     public GameObject m_Body;
@@ -23,7 +25,6 @@ public class Respon : MonoBehaviour
 
     public List<AINames> m_Ainame;
 
-
     public void Start()
     {
         SetUp();
@@ -36,6 +37,7 @@ public class Respon : MonoBehaviour
     public void SetUp()
     {
         GameObject D = Instantiate(m_Body, transform.position, transform.rotation);
+        m_MES.EnemyyAdd(D);
         EnemyAI EA = D.GetComponent<EnemyAI>();
         if (EA == null)
         {

@@ -18,21 +18,7 @@ namespace StateMachineAI
         public Respon m_RSP;
 
         public bool m_StartFlag = false;
-        /*
-        private void Update()
-        {
-            //存在していないクラスが指定されたら本体消滅
-            // if (!AddStateByName("IdleType")) Destroy(gameObject);
-            // if (!AddStateByName("SearchType")) Destroy(gameObject);
-            // if (!AddStateByName("AttackType")) Destroy(gameObject);
-            //ステートマシーンを自身として設定
-            //stateMachine = new StateMachine<EnemySuitAI>();
-            //m_Animator = GetComponent<Animator>();
-            //初期起動時は、A_Modeに移行させる
-            //ChangeState(AIState.IdleType);
-
-        }
-        */
+       
 
         public void AISetUp()
         {

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 9180329384354377866}
   m_Layer: 0
   m_Name: "\u4F1A\u793E\u54E1"
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112,12 +112,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Player: {fileID: 0}
-  m_EnemyCall: {fileID: 0}
-  enemyPrefab: {fileID: 0}
-  spawnPoint: {fileID: 0}
-  m_suitEnemy: {fileID: 5881298005958334029}
-  m_viewDistance: 10
-  m_viewAngle: 60
   m_Animator: {fileID: 0}
   m_RSP: {fileID: 0}
   m_StartFlag: 0
