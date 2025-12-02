@@ -12,6 +12,7 @@ public class Respon : MonoBehaviour
     public int m_UnitType = 0;
     public GameObject m_Body;
     public Transform m_Player;
+    public bool m_SetUpFlag;
 
     [System.Serializable]
 
@@ -27,12 +28,15 @@ public class Respon : MonoBehaviour
 
     public void Start()
     {
-        SetUp();
 
     }
     public void Update()
     {
-        
+        if (!m_SetUpFlag && m_MES)
+        {
+            SetUp();
+            m_SetUpFlag = true;
+        }
     }
     public void SetUp()
     {

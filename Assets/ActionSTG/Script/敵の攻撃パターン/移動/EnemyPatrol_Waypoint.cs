@@ -12,6 +12,8 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
     public AlertLevel m_AlertLevel;
     [Header("Responを自動アタッチ")]
     [SerializeField] private Respon m_Respon;
+    [Header("stoneを自動アタッチ")]
+    [SerializeField] private Stone m_stone;
     private NavMeshAgent m_agent;
     //どのWaypointに向かっているか
     private int m_currentIndex = 0;
@@ -107,6 +109,32 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
         {
             Debug.LogError("Responが入ってません");
         }
+    }
+    //石の方に向かう関数
+    public void StonePatrol()
+    {
+        GameObject target = GameObject.FindGameObjectWithTag("StoneGetTag");
+        if (target!=null)
+        {
+            // 既に MasterEnemySystem が付いているか確認
+            m_stone = target.GetComponent<Stone>();
+        }
+        if (m_stone!=null)
+        {
+            //石の方に向かう
+            m_agent.SetDestination(m_stone.transform.position);
+            
+        }
+        else
+        {
+            Debug.Log("石がありません。");
+        }
+        
+    }
+    //石の方を向いて停止
+    public void StonePatrolStop()
+    {
+
     }
     // 最も近いManagerを探す
     [System.Obsolete]

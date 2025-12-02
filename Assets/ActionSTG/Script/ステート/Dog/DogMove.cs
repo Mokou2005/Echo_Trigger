@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.AI;
-using static Cinemachine.DocumentationSortingAttribute;
 
 namespace StateMachineAI
 {

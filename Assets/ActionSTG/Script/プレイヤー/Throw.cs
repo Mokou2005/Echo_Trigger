@@ -6,12 +6,17 @@ public class Throw : MonoBehaviour
     [SerializeField] private Animator m_animator;
     [Header("ItemCountをアタッチ")]
     public ItemCount m_ItemCount;
+    [Header("投げるSE")]
+    [SerializeField] private AudioClip m_ThrowSE;
+    [Header("構えるSE")]
+    [SerializeField] private AudioClip m_BraceSE;
     [Header("投げる石")]
     public GameObject m_ThrowStone;
     [Header("出現する場所")]
     public Transform m_SpawnStone;
     [Header("放出する角度")]
     public float m_ThrowAngle=60f;
+    [SerializeField]private AudioSource m_AudioSource;
     //構えた状態かどうか
     [SerializeField] private bool m_IsBrace = false;
     //投げたフラグ
@@ -22,6 +27,14 @@ public class Throw : MonoBehaviour
 
     private void Start()
     {
+        if (m_AudioSource==null)
+        {
+            m_AudioSource = GetComponent<AudioSource>();
+            if (m_AudioSource==null)
+            {
+                Debug.LogError("AudioSourceがアタッチされてません");
+            }
+        }
         if (m_ItemCount == null)
         {
             Debug.LogError("ItemCountのscriptが入ってません。");
@@ -50,12 +63,19 @@ public class Throw : MonoBehaviour
                 if (m_IsBrace)
                 {
                     Debug.Log("構えた");
+                    m_AudioSource.PlayOneShot(m_BraceSE);
                     m_animator.SetBool("Brace", m_IsBrace);
                     m_IsThrow = true;
                     // 持ち石を生成（まだ持っていなければ）
                     if (m_HoldingStone == null)
                     {
                         m_HoldingStone = Instantiate(m_ThrowStone, m_SpawnStone.position, m_SpawnStone.rotation);
+                        //m_HoldingStoneにコンポーネントしてなかったら
+                        if (m_HoldingStone.GetComponent<MasterEnemySystem>()==null)
+                        {
+                            m_HoldingStone.AddComponent<MasterEnemySystem>();
+                            Debug.Log("Stone に MasterEnemySystem を自動追加しました！");
+                        }
                         // 手の位置の子にする（位置ずれ防止）
                         m_HoldingStone.transform.SetParent(m_SpawnStone);
                         // 重力オフにして落ちないように
@@ -72,8 +92,9 @@ public class Throw : MonoBehaviour
                     }
                 }
                 else
-                {
+                {                  
                     Debug.Log("しまった");
+                    m_AudioSource.PlayOneShot(m_BraceSE);
                     m_animator.SetBool("Brace", m_IsBrace);
                     m_IsThrow = false;
                 }
@@ -93,6 +114,7 @@ public class Throw : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && m_IsThrow)
         {
             Debug.Log("投げた");
+            m_AudioSource.PlayOneShot(m_ThrowSE);
             m_IsBrace = false;
             // Throw アニメーション再生
             m_animator.SetTrigger("Throw");

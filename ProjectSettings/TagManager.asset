@@ -7,6 +7,11 @@ TagManager:
   - Shiryou
   - Enemy
   - Stone
+  - HitArea
+  - MasterEnemySystemGetTag
+  - StoneGetTag
+  - Wall
+  - Floor
   layers:
   - Default
   - TransparentFX
