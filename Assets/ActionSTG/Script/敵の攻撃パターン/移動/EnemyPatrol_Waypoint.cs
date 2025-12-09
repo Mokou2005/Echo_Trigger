@@ -140,19 +140,25 @@ public class EnemyPatrol_Waypoint : MonoBehaviour
     [System.Obsolete]
     WaypointManager FindClosestManager()
     {
+        //シーンにある全てのWaypointManagerを獲得
         WaypointManager[] managers = FindObjectsOfType<WaypointManager>();
+        //最も近いものを保存する物
         WaypointManager closest = null;
+        //最小距離の初期値
         float minDist = Mathf.Infinity;
-
+        //獲得したWaypointManagerを一つずつ調べる
         foreach (var m in managers)
         {
+            //距離を計算
             float dist = Vector3.Distance(transform.position, m.transform.position);
+            //今までよりも近いものがあれば更新
             if (dist < minDist)
             {
                 minDist = dist;
                 closest = m;
             }
         }
+        //最終的に近かったものをいれる
         return closest;
     }
    

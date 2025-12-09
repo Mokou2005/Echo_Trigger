@@ -15,12 +15,14 @@ public class Playercontroller : MonoBehaviour
     private Rigidbody m_Rigidbody;
     private Transform m_Transform;
     private Animator m_Animator;
+    private Parameta m_Parameta;
     //地面についてるかどうか
     private bool Grounded = true;
     private void Start()
     {
         
         //格納
+        m_Parameta = GetComponent<Parameta>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_Transform = GetComponent<Transform>();
         m_Animator = GetComponent<Animator>();
@@ -56,6 +58,8 @@ public class Playercontroller : MonoBehaviour
             return;
         //噛まれているときは移動禁止
         if (Bite.m_BiteOut)
+            return;
+        if (m_Parameta.m_IsDie)
             return;
         // キャラクターとカメラの左右回転（Y軸）
         transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X") * CameraSpeed, 0));

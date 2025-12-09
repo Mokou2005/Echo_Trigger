@@ -14,11 +14,25 @@ public class CMRSet : MonoBehaviour
 
     private float m_HeightOffset = 0f; // 現在の上下オフセット値
     private float m_Pitch = 0f;        // 現在の上下回転角度
+    [Header("Parametaをアタッチ")]
+    public Parameta m_Parameta;
 
+
+    void Update()
+    {
+        // Parameta があって、死んでいたらこのスクリプトを無効化
+        if (m_Parameta != null && m_Parameta.m_IsDie)
+        {
+            //CMRSet が完全に停止する
+            this.enabled = false; 
+        }
+    }
     void LateUpdate()
     {
+
         if (m_CMRBase)
         {
+            
             //マウス入力で上下移動
             float mouseY = Input.GetAxis("Mouse Y");
  

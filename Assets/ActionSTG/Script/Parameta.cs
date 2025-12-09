@@ -11,6 +11,8 @@ public class Parameta : MonoBehaviour
     [Header("死亡アニメーター")]
     public Animator m_Die;
     public HPUI m_HpUI;
+    //死んだかどうか
+    public bool m_IsDie = false;
     public void TakeDamege(int DamegePoint)
     {
         //HPが0なら何もしない（二度死なないように）
@@ -20,6 +22,7 @@ public class Parameta : MonoBehaviour
         //HPが０以下なら
         if (m_Hp <= 0)
         {
+            m_IsDie = true;
             m_Hp = 0;
             //死亡アニメーション（五秒後消える）
             m_Die.SetTrigger("Die");
