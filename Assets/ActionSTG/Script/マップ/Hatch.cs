@@ -4,27 +4,48 @@ using UnityEngine;
 /// </summary>
 public class Hatch : MonoBehaviour
 {
-    [Header("テレポートする場所"),SerializeField]
+    [Header("テレポートする場所"), SerializeField]
     private Transform m_TPPosition;
 
+    [Header("Playerをアタッチ"), SerializeField]
+    private GameObject m_PlayerTP;
+
+    [Header("エリアに入ったかのフラグ"), SerializeField]
+    private bool m_InAria = false;
+
+    [Header("ゴールのオブジェクト"), SerializeField]
+    private GameObject m_GoalObject;
     /// <summary>
     /// エリアに入ったらテレポートの処理へ
     /// </summary>
     /// <param name="other">プレイヤー</param>
     private void OnTriggerEnter(Collider other)
     {
-        //プレイヤーならテレポートの処理へ
         if (other.gameObject.CompareTag("Player"))
         {
-            HatchTP();
+            //エリアを検知
+            m_InAria = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            //エリアから抜けた
+            m_InAria = false;
         }
     }
 
     /// <summary>
-    /// テレポートの処理
+    ///更新
     /// </summary>
-    private void HatchTP()
+    private void Update()
     {
-
+        //エリアに入っていてEキーを押したらTP
+        if (Input.GetKeyDown(KeyCode.E) &&　m_InAria)
+        {
+            m_PlayerTP.transform.position = m_TPPosition.position;
+            m_GoalObject.SetActive(true);
+        }
     }
 }
