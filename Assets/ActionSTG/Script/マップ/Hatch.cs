@@ -15,6 +15,9 @@ public class Hatch : MonoBehaviour
 
     [Header("ゴールのオブジェクト"), SerializeField]
     private GameObject m_GoalObject;
+
+    [Header("Loadingのscriptをアタッチ"),SerializeField]
+    private Loading m_Loading;
     /// <summary>
     /// エリアに入ったらテレポートの処理へ
     /// </summary>
@@ -44,6 +47,8 @@ public class Hatch : MonoBehaviour
         //エリアに入っていてEキーを押したらTP
         if (Input.GetKeyDown(KeyCode.E) &&　m_InAria)
         {
+            //ローディングする
+            m_Loading.gameObject.SetActive(true);
             m_PlayerTP.transform.position = m_TPPosition.position;
             m_GoalObject.SetActive(true);
         }
