@@ -85,11 +85,11 @@ public class GameOverSelection : MonoBehaviour
         {
             case 0:
                 m_Animator[1].SetBool("GiveUpPlay", false);
-                m_Animator[0].SetBool("ContinuePlay",true);
+                m_Animator[0].SetBool("ContinuePlay", true);
                 break;
             case 1:
                 m_Animator[0].SetBool("ContinuePlay", false);
-                m_Animator[1].SetBool("GiveUpPlay",true);
+                m_Animator[1].SetBool("GiveUpPlay", true);
                 break;
 
         }
@@ -106,6 +106,7 @@ public class GameOverSelection : MonoBehaviour
                     break;
                 case 1:
                     Debug.Log("ƒ^ƒCƒgƒ‹‚É–ß‚é");
+                    SceneManager.LoadScene("Title");
                     break;
 
             }
