@@ -72817,6 +72817,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3365369137460686657, guid: 0bd6291bb3f26484e80f6e33540267f7,
         type: 3}
+      propertyPath: m_Canvas
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3365369137460686657, guid: 0bd6291bb3f26484e80f6e33540267f7,
+        type: 3}
       propertyPath: m_PickUpImage
       value: 
       objectReference: {fileID: 1988287131029903571}
@@ -72861,7 +72866,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 31239606382221610, guid: 0bd6291bb3f26484e80f6e33540267f7, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1142654055354514433, guid: 0bd6291bb3f26484e80f6e33540267f7,
         type: 3}
@@ -198191,6 +198197,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3365369137460686657, guid: 0bd6291bb3f26484e80f6e33540267f7,
         type: 3}
+      propertyPath: m_Canvas
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3365369137460686657, guid: 0bd6291bb3f26484e80f6e33540267f7,
+        type: 3}
       propertyPath: m_PickUpImage
       value: 
       objectReference: {fileID: 1874532838778987954}
@@ -198240,7 +198251,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2800000, guid: 0a6ab2cbb58c36f4c81304019d72196c, type: 3}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 31239606382221610, guid: 0bd6291bb3f26484e80f6e33540267f7, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1142654055354514433, guid: 0bd6291bb3f26484e80f6e33540267f7,
         type: 3}
