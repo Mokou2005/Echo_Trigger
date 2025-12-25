@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Goal : MonoBehaviour
 {
@@ -19,5 +20,6 @@ public class Goal : MonoBehaviour
     {
         Debug.Log("ƒS[ƒ‹II");
         //¦ˆ—‚Í‚±‚±‚©‚ç
+        SceneManager.LoadScene("GoalScecn");
     }
 }
