@@ -1,14 +1,14 @@
 using UnityEngine;
-
+/*
 public class CamCtrl : MonoBehaviour
 {
-    [Header("向きのベース")]
+    [Header("蜷代″縺ｮ繝吶�ｼ繧ｹ")]
     public Transform m_MukiBase;
-    [Header("カメラのベース")]
+    [Header("繧ｫ繝｡繝ｩ縺ｮ繝吶�ｼ繧ｹ")]
     public Transform m_CameraBase;
-    [Header("初期カメラ向き")]
+    [Header("蛻晄悄繧ｫ繝｡繝ｩ蜷代″")]
     public float m_Muki = 0.0f;
-    [Header("最大カメラ向き")]
+    [Header("譛螟ｧ繧ｫ繝｡繝ｩ蜷代″")]
     public float m_MaxMuki = 30.0f;
 
     private void Start()
@@ -26,4 +26,4 @@ public class CamCtrl : MonoBehaviour
 
 
 }
-
+*/
