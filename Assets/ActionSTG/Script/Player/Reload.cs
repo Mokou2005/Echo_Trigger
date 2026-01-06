@@ -2,37 +2,41 @@ using UnityEngine;
 
 public class Reload : MonoBehaviour
 {
-    //ƒŠƒ[ƒhƒAƒjƒ[ƒ^[
+    //ãƒªãƒ­ãƒ¼ãƒ‰ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼
     private Animator m_ReloadAnimator;
-    //ƒŠƒ[ƒhŒø‰Ê‰¹
+    //ãƒªãƒ­ãƒ¼ãƒ‰åŠ¹æœéŸ³
     public AudioClip m_ReloadSound;
     private AudioSource m_Sound;
-    //ƒŠƒ[ƒh’†‚Í“®‚«‚ğ’â~ipublic static‚Í‘¼‚Ìscript‚É˜A“®j
+    //ãƒªãƒ­ãƒ¼ãƒ‰ä¸­ã¯å‹•ãã‚’åœæ­¢ï¼ˆpublic staticã¯ä»–ã®scriptã«é€£å‹•ï¼‰
     public static bool m_Reloading=false;
     public static int m_GunBullet;
-    //script‚ÌPlayerAttack‚ğQÆ
+    //scriptã®PlayerAttackã‚’å‚ç…§
     private PlayerAttack m_PlayerAttack;
     private bool m_Reload=false;
     private void Start()
     {
         m_ReloadAnimator = GetComponent<Animator>();
         m_Sound = GetComponent<AudioSource>();
-        //ƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg‚©‚ç PlayerAttack ‚ğ’T‚·
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰ PlayerAttack ã‚’æ¢ã™
         m_PlayerAttack = FindObjectOfType<PlayerAttack>();
     }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)&&!m_Reload)
+        if (Input.GetKeyDown(KeyCode.R) && !m_Reload)
         {
-            m_ReloadAnimator.SetBool("Reload", true);
-            m_Sound.PlayOneShot(m_ReloadSound);
-            m_Reloading = true;
-            m_Reload = true;
-            GunReload();
+            // å¼¾ãŒãƒ•ãƒ«ã®å ´åˆã€ã¾ãŸã¯äºˆå‚™å¼¾è–¬(Index)ãŒãªã„å ´åˆã¯ãƒªãƒ­ãƒ¼ãƒ‰ã—ãªã„
+            if (m_PlayerAttack.m_BulletCount < m_PlayerAttack.m_InitialBulletCount && m_PlayerAttack.m_BulletIndex > 0)
+            {
+                m_ReloadAnimator.SetBool("Reload", true);
+                m_Sound.PlayOneShot(m_ReloadSound);
+                m_Reloading = true;
+                m_Reload = true;
+                GunReload();
+            }
         }
 
     }
-    //ƒAƒjƒ[ƒVƒ‡ƒ“‚ªI—¹‚µ‚½‚ç“®‚­
+    //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã—ãŸã‚‰å‹•ã
     public void ReloadEnd()
     {
         m_ReloadAnimator.SetBool("Reload", false);
@@ -41,11 +45,9 @@ public class Reload : MonoBehaviour
     }
     void GunReload()
     {
-        //’e‚Ì•â[‚Ì”
-        m_GunBullet = m_PlayerAttack.m_InitialBulletCount;
         if (m_PlayerAttack != null)
         {
-            m_PlayerAttack.m_BulletCount = m_GunBullet;
+            m_PlayerAttack.ReloadAmmo();
         }
     }
 }

@@ -8,24 +8,37 @@ public class PlayerAttack : MonoBehaviour
 {
     [Header("撃った時のアニメーション")]
     public Transform m_effect;
+
     [Header("プレイヤーが持つ銃")]
     public Transform m_Gun;
+
     [Header("弾複製（プレハブ）")]
     public GameObject m_bulletPrefab;
+
     [Header("弾の速さ")]
     public float bulletSpeed;
+
     [Header("撃つ効果音")]
     public AudioClip m_soundClip;
+
     [Header("弾数")]
     public int m_BulletCount;
+
+    [Header("残り弾数"),SerializeField]
+    public int m_BulletIndex=30;
+
     [Header("初期弾数(リロード数)")]
     public int m_InitialBulletCount;
+
     [Header("標準をUIに")]
     public Image m_image;
+
     [Header("自動throwのscriptをアタッチ")]
     [SerializeField] private Throw m_throw;
+
     //撃つアニメーション
     [SerializeField]private Animator m_animator;
+
     //効果音
     [SerializeField] private AudioSource m_audioSource;
 
@@ -51,6 +64,8 @@ public class PlayerAttack : MonoBehaviour
     [System.Obsolete]
     void Update()
     {
+
+
         //投げる構えをしていなくマウスを押したら発射
         if (Input.GetMouseButtonUp(0)&&!m_throw.m_IsThrow )
         {
@@ -70,6 +85,8 @@ public class PlayerAttack : MonoBehaviour
 
         }
     }
+
+
 
     [System.Obsolete]
     void Shoot()
@@ -121,6 +138,22 @@ public class PlayerAttack : MonoBehaviour
         //五秒後弾を消す
         Destroy(bullet, 5f);
 
+    }
+
+    public void ReloadAmmo()
+    {
+        // 予備弾薬がない場合は何もしない
+        if (m_BulletIndex <= 0) return;
+
+        // 必要な弾数
+        int needed = m_InitialBulletCount - m_BulletCount;
+        if (needed <= 0) return;
+
+        // 実際にリロードする数（予備か必要数の小さい方）
+        int amount = Mathf.Min(needed, m_BulletIndex);
+
+        m_BulletCount += amount;
+        m_BulletIndex -= amount;
     }
     
 }
