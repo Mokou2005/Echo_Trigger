@@ -12,6 +12,7 @@ public class Playercontroller : MonoBehaviour
     [Header("スピード")]
     public float moveSpeed ;
     public bool isArea;
+    public bool m_IsBitten = false;
     private Rigidbody m_Rigidbody;
     private Transform m_Transform;
     private Animator m_Animator;

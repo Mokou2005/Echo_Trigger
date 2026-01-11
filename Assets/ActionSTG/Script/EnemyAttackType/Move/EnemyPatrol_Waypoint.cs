@@ -1,164 +1,197 @@
 using Unity.Services.Analytics;
 using UnityEngine;
 using UnityEngine.AI;
-
+/// <summary>
+/// æ•µã®ãƒ‘ãƒˆãƒ­ãƒ¼ãƒ«ãƒ‘ã‚¿ãƒ¼ãƒ³ï¼ˆå…¨æ•µå…±é€šï¼‰
+/// </summary>
 public class EnemyPatrol_Waypoint : MonoBehaviour
 {
-    [Header("WaypointManager‚Ìscript‚ğ©“®ƒAƒ^ƒbƒ`")]
+    [Header("WaypointManagerã®scriptã‚’è‡ªå‹•ã‚¢ã‚¿ãƒƒãƒ")]
     public WaypointManager m_Manager;
-    [Header("Sensor‚ğ©“®ƒAƒ^ƒbƒ`")]
+
+    [Header("Sensorã‚’è‡ªå‹•ã‚¢ã‚¿ãƒƒãƒ")]
     public Sensor m_Sensor;
-    [Header("AlertLevel‚ğ©“®ƒAƒ^ƒbƒ`")]
+
+    [Header("AlertLevelã‚’è‡ªå‹•ã‚¢ã‚¿ãƒƒãƒ")]
     public AlertLevel m_AlertLevel;
-    [Header("Respon‚ğ©“®ƒAƒ^ƒbƒ`")]
+
+    [Header("Responã‚’è‡ªå‹•ã‚¢ã‚¿ãƒƒãƒ")]
     [SerializeField] private Respon m_Respon;
-    [Header("stone‚ğ©“®ƒAƒ^ƒbƒ`")]
+
+    [Header("stoneã‚’è‡ªå‹•ã‚¢ã‚¿ãƒƒãƒ")]
     [SerializeField] private Stone m_stone;
+
+    [Header("å‚ç…§"),SerializeField]
     private NavMeshAgent m_agent;
-    //‚Ç‚ÌWaypoint‚ÉŒü‚©‚Á‚Ä‚¢‚é‚©
+
+    //ã©ã®Waypointã«å‘ã‹ã£ã¦ã„ã‚‹ã‹
     private int m_currentIndex = 0;
 
+    /// <summary>
+    /// é–‹å§‹
+    /// </summary>
     [System.Obsolete]
     private void Start()
     {
+        //å‚ç…§
         m_Sensor = GetComponent<Sensor>();
         m_agent = GetComponent<NavMeshAgent>();
         m_AlertLevel = GetComponent<AlertLevel>();
-        //NavMesh‚ÌˆÚ“®‘¬“x‚ğİ’è
+        //NavMeshã®ç§»å‹•é€Ÿåº¦ã‚’è¨­å®š
         switch (m_Respon.m_UnitType)
         {
             case 0:              
                 m_agent.speed = 0f;
-                Debug.Log("ƒX[ƒc‚Ì‘¬“x‚ğİ’è:" + m_agent.speed);
+                Debug.Log("ã‚¹ãƒ¼ãƒ„ã®é€Ÿåº¦ã‚’è¨­å®š:" + m_agent.speed);
                 break;
             case 1:
                 m_agent.speed = 1.5f;
-                Debug.Log("Œx”õˆõ‚Ì‘¬“x‚ğİ’è:" + m_agent.speed);
+                Debug.Log("è­¦å‚™å“¡ã®é€Ÿåº¦ã‚’è¨­å®š:" + m_agent.speed);
                 break;
            case 2:
                m_agent.speed = 3f;
-                Debug.Log("Dog‚Ì‘¬“x‚ğİ’è:" + m_agent.speed);
+                Debug.Log("Dogã®é€Ÿåº¦ã‚’è¨­å®š:" + m_agent.speed);
                 break;
             default:
-                Debug.LogError("–¢’m‚ÌUnityTyoe‚ª—ˆ‚Ü‚µ‚½Bcase‚ğŠm”F‚µ‚Ä‚­‚¾‚³‚¢B");
+                Debug.LogError("æœªçŸ¥ã®UnityTyoeãŒæ¥ã¾ã—ãŸã€‚caseã‚’ç¢ºèªã—ã¦ãã ã•ã„ã€‚");
                 break;
         }
 
 
-        //ƒ}ƒl[ƒWƒƒ[‚ª–¢İ’è‚È‚çA‹ß‚­‚Ì‚à‚Ì‚ğ©“®ŒŸõ
+        //ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ãŒæœªè¨­å®šãªã‚‰ã€è¿‘ãã®ã‚‚ã®ã‚’è‡ªå‹•æ¤œç´¢
         if (m_Manager == null)
         {
             m_Manager = FindClosestManager();
         }
         if (m_Sensor == null)
         {
-            Debug.LogError("ƒZƒ“ƒT[‚ª“ü‚Á‚Ä‚Ü‚¹‚ñ");
+            Debug.LogError("ã‚»ãƒ³ã‚µãƒ¼ãŒå…¥ã£ã¦ã¾ã›ã‚“");
         }
-        ////Ÿ‚ÌPoint‚Ö
+
+        ////æ¬¡ã®Pointã¸
         MoveToNextPoint();
     }
 
+    /// <summary>
+    /// æ›´æ–°
+    /// </summary>
     private void Update()
     {
-        if (m_agent.enabled)
-        {
-            //NavMeshAgent‚ª‚Ü‚¾Œo˜H‚ğŒvZ’†‚Å‚Í‚È‚­Œ»İ‚Ì–Ú“I’n‚É“’…‚µ‚½‚ç
-            if (!m_agent.pathPending && m_agent.remainingDistance < 0.5f)
-                //Ÿ‚ÌPoint‚Ö
-                MoveToNextPoint();
-        }
+        // AttackModeã®æ™‚ã¯Shootingã‚¹ã‚¯ãƒªãƒ—ãƒˆãŒåˆ¶å¾¡ã™ã‚‹ãŸã‚ã€ã“ã“ã§ã¯ä½•ã‚‚ã—ãªã„
+        if (m_AlertLevel != null && m_AlertLevel.m_AttackMode) return;
 
-        //ƒZƒ“ƒT[‚ª”½‰‚µ‚½‚ç
-        if (m_Sensor.m_Look == true && m_AlertLevel.m_AttackMode == false)
+        //ã‚»ãƒ³ã‚µãƒ¼ãŒåå¿œã—ãŸã‚‰ï¼ˆæ”»æ’ƒãƒ¢ãƒ¼ãƒ‰ã§ãªã„æ™‚ã®ã¿ï¼‰
+        if (m_Sensor.m_Look == true)
         {
-            //Navmesh–³Œø
             m_agent.enabled = false;
-
+            // ã‚»ãƒ³ã‚µãƒ¼åå¿œä¸­ã¯å·¡å›ã—ãªã„
+            return;
         }
-        if (m_Sensor.m_Look == false && m_AlertLevel.m_AttackMode == false)
+        else
         {
             m_agent.enabled = true;
         }
+
+        if (m_agent.enabled)
+        {
+            //NavMeshAgentãŒã¾ã çµŒè·¯ã‚’è¨ˆç®—ä¸­ã§ã¯ãªãç¾åœ¨ã®ç›®çš„åœ°ã«åˆ°ç€ã—ãŸã‚‰
+            if (!m_agent.pathPending && m_agent.remainingDistance < 0.5f)
+                //æ¬¡ã®Pointã¸
+                MoveToNextPoint();
+        }
     }
+
+    /// <summary>
+    /// æ¬¡ã¸ã®ãƒã‚¤ãƒ³ãƒˆã®å‡¦ç†
+    /// </summary>
     void MoveToNextPoint()
     {
         if (m_Manager == null || m_Manager.m_Waypoints.Length == 0)
         {
-            Debug.Log("WaypointManager‚Ìscript‚ªŒ´ˆö‚Å‚·B");
+            Debug.Log("WaypointManagerã®scriptãŒåŸå› ã§ã™ã€‚");
             return;
         }
-        //Ÿ‚ÌˆÚ“®ƒ|ƒCƒ“ƒg‚ğƒZƒbƒg
+        //æ¬¡ã®ç§»å‹•ãƒã‚¤ãƒ³ãƒˆã‚’ã‚»ãƒƒãƒˆ
         m_agent.destination = m_Manager.m_Waypoints[m_currentIndex].position;
-        //”z—ñ‚ÌÅŒã‚Ü‚Ås‚Á‚½‚çÅ‰‚É–ß‚é
+        //é…åˆ—ã®æœ€å¾Œã¾ã§è¡Œã£ãŸã‚‰æœ€åˆã«æˆ»ã‚‹
         m_currentIndex = (m_currentIndex + 1) % m_Manager.m_Waypoints.Length;
     }
 
+    /// <summary>
+    /// çŸ³ã«æŠ•ã’ã‚‰ã‚ŒãŸæ–¹ã«è¡Œãå‡¦ç†
+    /// </summary>
+    /// <param name="stonePos"></param>
     public void OnDetectStone(Vector3 stonePos)
     {
-        //UŒ‚’†‚È‚Ç
+        //æ”»æ’ƒä¸­ãªã©
         if (m_agent.enabled == false) return; 
 
         m_agent.SetDestination(stonePos);
-        //ƒpƒgƒ[ƒ‹ÄŠJ‚ÉÅ‰‚©‚ç
+        //ãƒ‘ãƒˆãƒ­ãƒ¼ãƒ«å†é–‹æ™‚ã«æœ€åˆã‹ã‚‰
         m_currentIndex = 0; 
     }
+
+    /// <summary>
+    /// ãƒªã‚¹ãƒãƒ¼ãƒ³å‡¦ç†
+    /// </summary>
+    /// <param name="respon"></param>
     public void SetRespon(Respon respon)
     {
         m_Respon = respon;
         if (m_Respon == null)
         {
-            Debug.LogError("Respon‚ª“ü‚Á‚Ä‚Ü‚¹‚ñ");
+            Debug.LogError("ResponãŒå…¥ã£ã¦ã¾ã›ã‚“");
         }
     }
-    //Î‚Ì•û‚ÉŒü‚©‚¤ŠÖ”
+    //çŸ³ã®æ–¹ã«å‘ã‹ã†é–¢æ•°
     public void StonePatrol()
     {
         GameObject target = GameObject.FindGameObjectWithTag("StoneGetTag");
         if (target!=null)
         {
-            // Šù‚É MasterEnemySystem ‚ª•t‚¢‚Ä‚¢‚é‚©Šm”F
+            // æ—¢ã« MasterEnemySystem ãŒä»˜ã„ã¦ã„ã‚‹ã‹ç¢ºèª
             m_stone = target.GetComponent<Stone>();
         }
         if (m_stone!=null)
         {
-            //Î‚Ì•û‚ÉŒü‚©‚¤
+            //çŸ³ã®æ–¹ã«å‘ã‹ã†
             m_agent.SetDestination(m_stone.transform.position);
             
         }
         else
         {
-            Debug.Log("Î‚ª‚ ‚è‚Ü‚¹‚ñB");
+            Debug.Log("çŸ³ãŒã‚ã‚Šã¾ã›ã‚“ã€‚");
         }
         
     }
-    //Î‚Ì•û‚ğŒü‚¢‚Ä’â~
+    //çŸ³ã®æ–¹ã‚’å‘ã„ã¦åœæ­¢
     public void StonePatrolStop()
     {
 
     }
-    // Å‚à‹ß‚¢Manager‚ğ’T‚·
+    // æœ€ã‚‚è¿‘ã„Managerã‚’æ¢ã™
     [System.Obsolete]
     WaypointManager FindClosestManager()
     {
-        //ƒV[ƒ“‚É‚ ‚é‘S‚Ä‚ÌWaypointManager‚ğŠl“¾
+        //ã‚·ãƒ¼ãƒ³ã«ã‚ã‚‹å…¨ã¦ã®WaypointManagerã‚’ç²å¾—
         WaypointManager[] managers = FindObjectsOfType<WaypointManager>();
-        //Å‚à‹ß‚¢‚à‚Ì‚ğ•Û‘¶‚·‚é•¨
+        //æœ€ã‚‚è¿‘ã„ã‚‚ã®ã‚’ä¿å­˜ã™ã‚‹ç‰©
         WaypointManager closest = null;
-        //Å¬‹——£‚Ì‰Šú’l
+        //æœ€å°è·é›¢ã®åˆæœŸå€¤
         float minDist = Mathf.Infinity;
-        //Šl“¾‚µ‚½WaypointManager‚ğˆê‚Â‚¸‚Â’²‚×‚é
+        //ç²å¾—ã—ãŸWaypointManagerã‚’ä¸€ã¤ãšã¤èª¿ã¹ã‚‹
         foreach (var m in managers)
         {
-            //‹——£‚ğŒvZ
+            //è·é›¢ã‚’è¨ˆç®—
             float dist = Vector3.Distance(transform.position, m.transform.position);
-            //¡‚Ü‚Å‚æ‚è‚à‹ß‚¢‚à‚Ì‚ª‚ ‚ê‚ÎXV
+            //ä»Šã¾ã§ã‚ˆã‚Šã‚‚è¿‘ã„ã‚‚ã®ãŒã‚ã‚Œã°æ›´æ–°
             if (dist < minDist)
             {
                 minDist = dist;
                 closest = m;
             }
         }
-        //ÅI“I‚É‹ß‚©‚Á‚½‚à‚Ì‚ğ‚¢‚ê‚é
+        //æœ€çµ‚çš„ã«è¿‘ã‹ã£ãŸã‚‚ã®ã‚’ã„ã‚Œã‚‹
         return closest;
     }
    

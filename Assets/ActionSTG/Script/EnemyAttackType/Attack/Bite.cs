@@ -9,22 +9,22 @@ public class Bite : MonoBehaviour
     [SerializeField] private NavMeshAgent m_agent;
     [SerializeField] private Transform m_BitePoint;
     [SerializeField] private GameObject m_BitePrefab;
-    // ƒvƒŒƒCƒ„[‚ÌTransform‚ğ•Û
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®Transformã‚’ä¿æŒ
     public Transform m_Target;
     public float m_Count=0;
-    //‰“–i‚¦‚ğ‚µ‚½‚©
+    //é å ãˆã‚’ã—ãŸã‹
     public bool m_Howl = false;
-    //–i‚¦I‚í‚Á‚½‚©
+    //å ãˆçµ‚ã‚ã£ãŸã‹
     public bool m_HowlFinished = false;
-   @//ƒvƒŒƒCƒ„ƒGƒŠƒA‚É“ü‚Á‚½‚©
+   ã€€//ãƒ—ãƒ¬ã‚¤ãƒ¤ã‚¨ãƒªã‚¢ã«å…¥ã£ãŸã‹
     public bool m_Area = false;
     //Sound
     public bool m_BiteSound = false;
-    //Šš‚İ‚Â‚¢‚½‚©
+    //å™›ã¿ã¤ã„ãŸã‹
     public bool m_Bite=false;
-    //€‚ñ‚¾‚©
+    //æ­»ã‚“ã ã‹
     public bool m_Die=false;
-    //Šš‚Ü‚ê‚½‚ç“®‚«’â~
+    //å™›ã¾ã‚ŒãŸã‚‰å‹•ãåœæ­¢
     public static bool m_BiteOut = false;
 
 
@@ -55,39 +55,39 @@ public class Bite : MonoBehaviour
     {
         if (!m_Die)
         {
-            //‚Ü‚¾–i‚¦‚Ä–³‚¯‚ê‚Î–i‚¦‚éƒAƒjƒ[ƒVƒ‡ƒ“
+            //ã¾ã å ãˆã¦ç„¡ã‘ã‚Œã°å ãˆã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
             if (!m_Howl)
             {
                 m_Animator.SetTrigger("Howling");
                 m_DogSound.m_Source.PlayOneShot(m_DogSound.m_Howling);
                 m_Howl = true;
             }
-            //–i‚¦‚ÄI‚í‚Á‚½‚ç‘–‚éƒAƒjƒ[ƒVƒ‡ƒ“
+            //å ãˆã¦çµ‚ã‚ã£ãŸã‚‰èµ°ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
             if (m_Howl)
             {
                 m_Animator.SetBool("Search", true);
             }
-            //–i‚¦I‚í‚Á‚½‚çPlay‚ÉŒü‚©‚Á‚Ä‘–‚èo‚·
+            //å ãˆçµ‚ã‚ã£ãŸã‚‰Playã«å‘ã‹ã£ã¦èµ°ã‚Šå‡ºã™
             if (m_HowlFinished&&!m_Bite)
             {
-                // ƒ^[ƒQƒbƒg‚ª–¢İ’è‚È‚çAƒvƒŒƒCƒ„[‚ğ’T‚·
+                // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒæœªè¨­å®šãªã‚‰ã€ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’æ¢ã™
                 if (m_Target == null)
                 {
                     GameObject player = GameObject.FindWithTag("Player");
                     if (player != null)
                         m_Target = player.transform;
                 }
-                //ƒ^[ƒQƒbƒg‚ª‚ ‚é‚È‚ç‚»‚±‚ÉŒü‚©‚¤
+                //ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒã‚ã‚‹ãªã‚‰ãã“ã«å‘ã‹ã†
                 if (m_Target != null)
                 {
                     m_agent.enabled = true;
                     m_agent.SetDestination(m_Target.position);
                 }
             }
-            // ƒvƒŒƒCƒ„[‚ÉÚG‚µ‚½‚çŠš‚İ‚Â‚«ŠJn
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«æ¥è§¦ã—ãŸã‚‰å™›ã¿ã¤ãé–‹å§‹
             if (m_Area && !m_Bite)
             {
-                Debug.Log("Šš‚İ‚Â‚¢‚½");
+                Debug.Log("å™›ã¿ã¤ã„ãŸ");
                 m_Bite = true;
                 m_agent.enabled = false;
                 m_Animator.SetBool("Bite", true);
@@ -102,28 +102,28 @@ public class Bite : MonoBehaviour
     {
         m_HowlFinished = true;
     }
-    //ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚ÌŠÖ”
+    //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã®é–¢æ•°
     public void BiteNow()
     {
         if (m_BitePoint && m_BitePrefab)
         {
-            //Šš‚İ‚Â‚­ˆÊ’u‚ÉƒIƒuƒWƒFƒNƒg‚ğ¶¬
+            //å™›ã¿ã¤ãä½ç½®ã«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
             GameObject biteObj = Instantiate(m_BitePrefab, m_BitePoint.position, m_BitePoint.rotation);
 
-            // DamegeSystem‚É‚±‚ÌŒ¢‚ÌParameta‚ğ“n‚·
+            // DamegeSystemã«ã“ã®çŠ¬ã®Parametaã‚’æ¸¡ã™
             DamegeSystem dmg = biteObj.GetComponent<DamegeSystem>();
             Parameta myParam = GetComponent<Parameta>();
-            //‚±‚Ì“ñ‚Â‚ªŠi”[‚³‚ê‚Ä‚¢‚½‚ç
+            //ã“ã®äºŒã¤ãŒæ ¼ç´ã•ã‚Œã¦ã„ãŸã‚‰
             if (dmg && myParam)
                 dmg.m_Parameta = myParam;
-            //0.2•bŒã‚ÉÁ‚·
+            //0.2ç§’å¾Œã«æ¶ˆã™
             Destroy(biteObj, 0.2f);
         }
         m_Bite = true;
         m_agent.enabled = false;
        
     }
-    //ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚ÌŠÖ”
+    //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã®é–¢æ•°
     public void BiteEnd()
     {
         Debug.Log(888);
@@ -134,10 +134,10 @@ public class Bite : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        //player‚ª“ü‚Á‚½‚ç
+        //playerãŒå…¥ã£ãŸã‚‰
         if (other.CompareTag("Player"))
         {
-            //ƒGƒŠƒA‚É“ü‚Á‚½
+            //ã‚¨ãƒªã‚¢ã«å…¥ã£ãŸ
             m_Area = true;
             
         }

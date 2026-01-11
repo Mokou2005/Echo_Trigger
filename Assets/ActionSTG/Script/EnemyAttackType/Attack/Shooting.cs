@@ -1,123 +1,140 @@
 using UnityEngine;
 using UnityEngine.AI;
-
+/// <summary>
+/// プレイヤーに向けて銃を撃つ処理
+/// </summary>
 public class Shooting : MonoBehaviour
 {
-    [Header("Player�̈ʒu")]
-    [SerializeField] private Transform m_Target;
-    [Header("�O���ʒu�i�e�j")]
-    [SerializeField] private Transform[] m_RemoveBullet;
-    [Header("Play�ɓ�����m��")]
-    [SerializeField] private float m_BulletProbability = 0.8f;
-    [Header("�˒�������ۂ���")]
-    [SerializeField] private float m_CombatDistance = 5f;
-    [Header("�˒��������ł̈ړ����x")]
-    [SerializeField] private float m_MoveSpeed = 2f;
-    [Header("�U���Ԋu�i�b�j")]
-    [SerializeField] private float m_ShootInterval = 0.5f;
-    [SerializeField] private NavMeshAgent m_agent;
-    [SerializeField] private Animator m_Animator;
-    [Header("�e�iAssaultRifle�j")]
-    [SerializeField] private AssaultRifle m_Rifle;
+    [Header("ターゲット"), SerializeField]
+    private Transform m_Target;
 
-    private bool m_IsReloading = false;
-    private int m_Count = 0;
+    [Header("射撃距離（この距離以内で射撃）")]
+    [SerializeField] private float m_ShootingRange = 5.0f;
+
+    [Header("追跡速度")]
+    [SerializeField] private float m_ChaseSpeed = 3.5f;
+
+    [Header("射撃間隔（秒）")]
+    [SerializeField] private float m_ShootInterval = 1.0f;
+   
+    [Header("自動で参照されます。")]
+    [SerializeField] private Animator m_Animator;
+    [SerializeField] private AssaultRifle m_Rifle;
+    [SerializeField] private NavMeshAgent m_Agent;
+    [SerializeField] private AlertLevel m_AlertLevel;
+    [SerializeField] private Sensor m_Sensor;
+
+    //撃つごとの間の時間帯
     private float m_ShootTimer = 0f;
+
+    // 前回のターゲット位置
+    private Vector3 m_LastTargetPosition;
 
     void Start()
     {
-        m_Animator = GetComponent<Animator>();
-        m_agent = GetComponent<NavMeshAgent>();
-
-        if (m_Rifle == null)
-            m_Rifle = GetComponentInChildren<AssaultRifle>();
-
+        //自動で格納
+        if (m_Animator == null) m_Animator = GetComponent<Animator>();
+        if (m_Rifle == null) m_Rifle = GetComponentInChildren<AssaultRifle>();
+        if (m_Agent == null) m_Agent = GetComponent<NavMeshAgent>();
+        if (m_AlertLevel == null) m_AlertLevel = GetComponent<AlertLevel>();
+        if (m_Sensor == null) m_Sensor = GetComponent<Sensor>();
         if (m_Target == null)
         {
             GameObject player = GameObject.FindWithTag("Player");
-            if (player != null) m_Target = player.transform;
-            else Debug.LogWarning("Player�^�O�̃I�u�W�F�N�g��������܂���I");
-        }
-    }
-
-    void Update()
-    {
-        if (m_Target == null) return;
-
-        float distance = Vector3.Distance(transform.position, m_Target.position);
-        bool inCombatRange = distance <= m_CombatDistance + 1f; // �˒�����������
-
-        if (!inCombatRange)
-        {
-            // �˒��O �� �ڋ�
-            m_Animator.SetBool("Run", true);
-            m_agent.enabled = true;
-            m_agent.speed = 3.5f;
-            m_agent.SetDestination(m_Target.position);
-            return;
-        }
-
-        // �˒����F������ۂ��Ȃ���U��
-        m_agent.enabled = true;
-        m_agent.speed = m_MoveSpeed;
-
-        Vector3 lookPos = m_Target.position - transform.position;
-        lookPos.y = 0;
-        Quaternion rotation = Quaternion.LookRotation(lookPos);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 5f);
-
-        if (distance < m_CombatDistance - 1f)
-        {
-            m_agent.SetDestination(transform.position);
-            m_Animator.SetBool("Run", false);
-
-            if (m_IsReloading) return;
-
-            m_ShootTimer += Time.deltaTime;
-            if (m_ShootTimer >= m_ShootInterval)
+            if (player != null)
             {
-                m_ShootTimer = 0f;
-
-                if (m_Count < 5)
-                {
-                    m_agent.enabled = false;
-                    m_Animator.SetTrigger("Attack");
-                    m_Count++;
-                    Shot();
-                }
-                else
-                {
-                    m_agent.enabled = false;
-                    m_Animator.SetTrigger("Reload");
-                    m_IsReloading = true;
-                    m_Count = 0;
-                    Invoke(nameof(EndReload), 2f);
-                }
+                m_Target = player.transform;
             }
         }
-        else if (distance > m_CombatDistance + 1f)
-        {
-            // �˒��O �� �ڋ�
-            m_Animator.SetBool("Run", true);
-            m_agent.SetDestination(m_Target.position);
-        }
+
+        // 最初は移動をオンに
+        m_Agent.enabled = true;
     }
 
-    private void Shot()
+    /// <summary>
+    /// 更新
+    /// </summary>
+    private void Update()
     {
-        if (m_Rifle != null)
+        // AlertLevelのm_AttackModeがfalseなら何もしない
+        if (m_AlertLevel == null || !m_AlertLevel.m_AttackMode) return;
+
+        // ターゲットがなければ何もしない
+        if (m_Target == null) return;
+
+        // NavMeshAgentが無効なら有効にする
+        if (!m_Agent.enabled) m_Agent.enabled = true;
+
+        // プレイヤーとの距離を計算
+        float distance = Vector3.Distance(transform.position, m_Target.position);
+
+        // 射撃タイマーを更新
+        m_ShootTimer -= Time.deltaTime;
+
+        // 射撃距離以内ならば
+        if (distance <= m_ShootingRange)
         {
-            m_Rifle.Shot();
-            Debug.Log("�e�𔭎˂��܂����I");
+            // 移動を完全に停止
+            m_Agent.speed = 0f;
+            m_Agent.velocity = Vector3.zero;
+
+            // プレイヤーの方を向く
+            LookAtTarget();
+
+            // 射撃間隔ごとに撃つ
+            if (m_ShootTimer <= 0f)
+            {
+                Shoot();
+                m_ShootTimer = m_ShootInterval;
+            }
         }
         else
         {
-            Debug.LogWarning("AssaultRifle ���ݒ肳��Ă��܂���I");
+            // 射撃距離外ならプレイヤーを追跡
+            m_Agent.speed = m_ChaseSpeed;
+            m_Agent.isStopped = false;
+
+            // ターゲットが1m以上移動したか、経路がない場合のみ再計算
+            float targetMoveDistance = Vector3.Distance(m_Target.position, m_LastTargetPosition);
+            if (!m_Agent.hasPath || targetMoveDistance > 1.0f)
+            {
+                m_Agent.SetDestination(m_Target.position);
+                m_LastTargetPosition = m_Target.position;
+            }
         }
     }
 
-    private void EndReload()
+    /// <summary>
+    /// ターゲットの方向を向く
+    /// </summary>
+    private void LookAtTarget()
     {
-        m_IsReloading = false;
+        Vector3 direction = (m_Target.position - transform.position).normalized;
+        // Y軸の回転だけにする
+        direction.y = 0; 
+        if (direction != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+        }
     }
+
+    /// <summary>
+    /// 撃つ処理
+    /// </summary>
+    private void Shoot()
+    {
+        m_Animator.SetTrigger("Attack");
+
+        if (m_Rifle != null)
+        {
+            m_Rifle.Shot();
+            Debug.Log("弾を発射しました！");
+        }
+        else
+        {
+            Debug.LogWarning("AssaultRifleが設定されていません");
+        }
+    }
+
 }

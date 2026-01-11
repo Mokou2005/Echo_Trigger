@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 namespace StateMachineAI
 {
@@ -8,10 +9,13 @@ namespace StateMachineAI
     public class SecurityMove : State<EnemyAI>
     {
         public SecurityMove(EnemyAI owner) : base(owner) { }
+
+        private EnemyPatrol_Waypoint col;
+
         public override void Enter()
         {
             //移動scriptを導入
-            EnemyPatrol_Waypoint col = owner.GetComponent<EnemyPatrol_Waypoint>();
+            col = owner.GetComponent<EnemyPatrol_Waypoint>();
             //センサーを導入
             Sensor Sen = owner.GetComponent<Sensor>();
             //警戒度を導入

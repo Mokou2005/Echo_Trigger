@@ -14,9 +14,7 @@ namespace StateMachineAI
     {
         public Transform m_Player;
         public Animator m_Animator;
-
         public Respon m_RSP;
-
         public bool m_StartFlag = false;
        
 
@@ -27,9 +25,6 @@ namespace StateMachineAI
             stateMachine = new StateMachine<EnemyAI>();
             m_Animator = GetComponent<Animator>();
              ChangeState(AIState.Idle);
-                 
-            
-
         }
 
 
