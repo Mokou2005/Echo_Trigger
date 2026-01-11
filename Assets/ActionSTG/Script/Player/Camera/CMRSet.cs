@@ -12,6 +12,10 @@ public class CMRSet : MonoBehaviour
     public float minPitch = -30f;    // 下を向く限界角度
     public float maxPitch = 45f;     // 上を向く限界角度
 
+    [Header("壁衝突設定")]
+    public float m_SafetyMargin = 0.2f;      // 壁との余白
+    public LayerMask m_CollisionLayers = ~0; // 衝突検出するレイヤー
+
     private float m_HeightOffset = 0f; // 現在の上下オフセット値
     private float m_Pitch = 0f;        // 現在の上下回転角度
     [Header("Parametaをアタッチ")]
@@ -43,6 +47,20 @@ public class CMRSet : MonoBehaviour
 
             //新しい位置（ベースの位置 + 高さオフセット）
             Vector3 newPos = m_CMRBase.position + new Vector3(0, m_HeightOffset, 0);
+
+            // === 壁衝突検出（Linecast） ===
+            // カメラの向いている方向にLinecastして、壁があれば手前に移動
+            RaycastHit hit;
+            Vector3 lookDirection = transform.forward;
+            float checkDistance = 1.0f; // 前方チェック距離
+
+            // 後方の壁をチェック（カメラがプレイヤーの後ろに壁があるか）
+            if (Physics.Linecast(m_CMRBase.position, newPos, out hit, m_CollisionLayers))
+            {
+                // 壁があれば、壁の手前に配置
+                newPos = hit.point + hit.normal * m_SafetyMargin;
+            }
+
             transform.position = newPos;
 
             //ベースの回転を継承しつつ、上下角度を加える
@@ -52,6 +70,7 @@ public class CMRSet : MonoBehaviour
         }
     }
 }
+
 
 
 
