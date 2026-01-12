@@ -6035,9 +6035,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Target: {fileID: 1138119937}
-  m_Distance: 4
-  m_Offset: {x: 0, y: 0, z: 0}
-  m_SafetyMargin: 0.2
+  m_Distance: 0.4
+  m_Offset: {x: 0, y: 0.4, z: 0}
+  m_SafetyMargin: 0.5
   m_MoveSpeed: 10
   m_CameraRadius: 0.3
   m_CollisionLayers:
@@ -8992,6 +8992,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_WallLayer.m_Bits
       value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 8907581965982173543, guid: 5c02b5486f08d074eaa3449cc07598fb,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.271
+      objectReference: {fileID: 0}
+    - target: {fileID: 8907581965982173543, guid: 5c02b5486f08d074eaa3449cc07598fb,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.269
       objectReference: {fileID: 0}
     - target: {fileID: 9075249504675815956, guid: 5c02b5486f08d074eaa3449cc07598fb,
         type: 3}
