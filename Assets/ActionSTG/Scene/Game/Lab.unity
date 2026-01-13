@@ -6476,6 +6476,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 428492409643510043, guid: 161140e3666f7b844a3c500ee161c6b8,
+        type: 3}
+      propertyPath: reverbZoneMixCustomCurve.m_Curve.Array.data[0].value
+      value: 1.1
+      objectReference: {fileID: 0}
     - target: {fileID: 429642234581994618, guid: 161140e3666f7b844a3c500ee161c6b8,
         type: 3}
       propertyPath: m_Layer
@@ -7904,7 +7909,7 @@ PrefabInstance:
     - target: {fileID: 5686840084365872543, guid: 161140e3666f7b844a3c500ee161c6b8,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5702159471227973599, guid: 161140e3666f7b844a3c500ee161c6b8,
         type: 3}
@@ -8901,7 +8906,7 @@ PrefabInstance:
     - target: {fileID: 1790779061897951798, guid: 5c02b5486f08d074eaa3449cc07598fb,
         type: 3}
       propertyPath: m_Hp
-      value: 30
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1790779061897951798, guid: 5c02b5486f08d074eaa3449cc07598fb,
         type: 3}
@@ -8926,12 +8931,12 @@ PrefabInstance:
     - target: {fileID: 2516987800325953283, guid: 5c02b5486f08d074eaa3449cc07598fb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.59
+      value: -18.66
       objectReference: {fileID: 0}
     - target: {fileID: 2516987800325953283, guid: 5c02b5486f08d074eaa3449cc07598fb,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.09
+      value: 3.14
       objectReference: {fileID: 0}
     - target: {fileID: 2516987800325953283, guid: 5c02b5486f08d074eaa3449cc07598fb,
         type: 3}

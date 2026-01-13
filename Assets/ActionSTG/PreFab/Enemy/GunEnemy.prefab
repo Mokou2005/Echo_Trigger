@@ -3999,6 +3999,7 @@ MonoBehaviour:
   m_MaxHp: 10
   m_Die: {fileID: 7645818931938372528}
   m_HpUI: {fileID: 0}
+  m_IsDie: 0
 --- !u!114 &6237662262171601536
 MonoBehaviour:
   m_ObjectHideFlags: 0

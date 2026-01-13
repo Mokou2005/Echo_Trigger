@@ -1,32 +1,61 @@
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.AI;
 public class Parameta : MonoBehaviour
 {
-    //ƒ`[ƒ€
+    [Header("ã“ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒãƒ¼ãƒ ")]
     public string m_Team;
-    //HP
+
+    [Header("HPã¨æœ€å¤§HP")]
     public int m_Hp = 100;
     public int m_MaxHp = 100;
-    [Header("€–SƒAƒjƒ[ƒ^[")]
+
+    [Header("æ­»äº¡ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼")]
     public Animator m_Die;
+
+    //HPã®UI
     public HPUI m_HpUI;
-    //€‚ñ‚¾‚©‚Ç‚¤‚©
+    //æ­»ã‚“ã ã‹ã©ã†ã‹
     public bool m_IsDie = false;
+
+    /// <summary>
+    /// ãƒ€ãƒ¡ãƒ¼ã‚¸å‡¦ç†ã“ã“ã‹ã‚‰æ­»äº¡å‡¦ç†ã¸
+    /// </summary>
+    /// <param name="DamegePoint"></param>
     public void TakeDamege(int DamegePoint)
     {
-        //HP‚ª0‚È‚ç‰½‚à‚µ‚È‚¢i“ñ“x€‚È‚È‚¢‚æ‚¤‚Éj
+        //HPãŒ0ãªã‚‰ä½•ã‚‚ã—ãªã„ï¼ˆäºŒåº¦æ­»ãªãªã„ã‚ˆã†ã«ï¼‰
         if (m_Hp <= 0)
             return;
+
         m_Hp -= DamegePoint;
-        //HP‚ª‚OˆÈ‰º‚È‚ç
+        //HPãŒï¼ä»¥ä¸‹ãªã‚‰ã‹ã¤Tagdeã§Enemyãªã‚‰
         if (m_Hp <= 0)
         {
             m_IsDie = true;
             m_Hp = 0;
-            //€–SƒAƒjƒ[ƒVƒ‡ƒ“iŒÜ•bŒãÁ‚¦‚éj
+            
+            // NavMeshAgentã‚’åœæ­¢ã—ã¦ç§»å‹•ã‚’æ­¢ã‚ã‚‹
+            NavMeshAgent agent = GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.isStopped = true;
+                agent.enabled = false;
+            }
+            
+            // ä»–ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’ã™ã¹ã¦åœæ­¢
+            MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
+            foreach (var script in scripts)
+            {
+                // Parameta è‡ªèº«ã¯æ­¢ã‚ãªã„
+                if (script != this) 
+                {
+                    script.enabled = false;
+                }
+            }
+            //æ­»äº¡ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ï¼ˆäº”ç§’å¾Œæ¶ˆãˆã‚‹ï¼‰
             m_Die.SetTrigger("Die");
-            Destroy(gameObject,5f);
+            Destroy(gameObject, 5f);
         }
         if (m_HpUI != null)
         {

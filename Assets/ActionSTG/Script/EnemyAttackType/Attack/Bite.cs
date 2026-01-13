@@ -9,6 +9,7 @@ public class Bite : MonoBehaviour
     [SerializeField] private NavMeshAgent m_agent;
     [SerializeField] private Transform m_BitePoint;
     [SerializeField] private GameObject m_BitePrefab;
+    [SerializeField] private Parameta m_Parameta;
     // プレイヤーのTransformを保持
     public Transform m_Target;
     public float m_Count=0;
@@ -31,6 +32,7 @@ public class Bite : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        m_Parameta=GetComponent<Parameta>();
         m_Animator = GetComponent<Animator>();
         m_DogSound = GetComponent<DogSound>();
         m_agent = GetComponent<NavMeshAgent>();
@@ -126,7 +128,6 @@ public class Bite : MonoBehaviour
     //アニメーションイベントの関数
     public void BiteEnd()
     {
-        Debug.Log(888);
         m_Bite = false;
         m_Area = false;
         m_agent.enabled = true;
