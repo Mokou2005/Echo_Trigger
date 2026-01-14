@@ -162,7 +162,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d13700fe717bf3e40b7870e52a6ee6e2,
         type: 3}
       propertyPath: m_Name
-      value: Sci-Fi Dog Skin3
+      value: Dog
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d13700fe717bf3e40b7870e52a6ee6e2,
         type: 3}
@@ -219,6 +219,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8199608646544542567}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d13700fe717bf3e40b7870e52a6ee6e2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6265107664661791072}
   m_SourcePrefab: {fileID: 100100000, guid: d13700fe717bf3e40b7870e52a6ee6e2, type: 3}
 --- !u!1 &390710742360739429 stripped
 GameObject:
@@ -436,6 +440,20 @@ MonoBehaviour:
   m_MaxHp: 10
   m_Die: {fileID: 1985862595680892763}
   m_HpUI: {fileID: 0}
+  m_IsDie: 0
+--- !u!114 &-6265107664661791072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 390710742360739429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 105f114e3da87bb499cd8a89f7effab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AlertLevel: {fileID: 0}
 --- !u!4 &1020001497668588767 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d13700fe717bf3e40b7870e52a6ee6e2,
