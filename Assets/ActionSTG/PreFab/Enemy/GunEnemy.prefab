@@ -3820,6 +3820,7 @@ GameObject:
   - component: {fileID: 2591309298028966559}
   - component: {fileID: 7154103463906154738}
   - component: {fileID: 6237662262171601536}
+  - component: {fileID: 4646031081600839528}
   m_Layer: 0
   m_Name: GunEnemy
   m_TagString: Enemy
@@ -4016,6 +4017,18 @@ MonoBehaviour:
   m_Animator: {fileID: 7645818931938372528}
   m_RSP: {fileID: 0}
   m_StartFlag: 0
+--- !u!114 &4646031081600839528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2973538306440205079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 105f114e3da87bb499cd8a89f7effab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2982683478537988239
 GameObject:
   m_ObjectHideFlags: 0

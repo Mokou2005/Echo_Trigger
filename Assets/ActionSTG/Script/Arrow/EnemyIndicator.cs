@@ -23,31 +23,105 @@ public class EnemyIndicator : MonoBehaviour
     [Header("インジケーター表示キー"), SerializeField]
     KeyCode m_ShowIndicatorKey = KeyCode.Tab;
 
+    [Header("アビリティのクールタイム"), SerializeField]
+    private float m_LookAbilityCoolingTime = 60f;
+
+    [Header("アビリティの持ち時間"), SerializeField]
+    private float m_LookAbilityNowTime = 10f;
+
     [Tooltip("敵とUIのペア辞書")]
     Dictionary<Transform, RectTransform> m_Indicators = new Dictionary<Transform, RectTransform>();
 
-    /// <summary>
-    /// インジケーターが表示中かどうか
-    /// </summary>
-    bool m_IsShowingIndicators = false;
+    //タイマーを設定
+    [SerializeField] private float m_AbilityNowTime;
+    [SerializeField] private float m_AbilityCoolingTime;
 
+    /// <summary>
+    /// インジケーターが表示中かどうか（アビリティ発動中か）
+    /// </summary>
+    bool m_IsActive = false;
+
+    /// <summary>
+    /// 開始
+    /// </summary>
+    private void Start()
+    {
+        //最初はクールタイムは完了状態に
+        m_AbilityCoolingTime = m_LookAbilityCoolingTime;
+
+        //初期値に設定
+        m_AbilityNowTime = 0f;
+
+        //非表示
+        m_IsActive = false;
+    }
+
+    /// <summary>
+    /// 更新
+    /// </summary>
     private void Update()
     {
-        // 指定キーが押されているかチェック
-        if (Input.GetKeyDown(m_ShowIndicatorKey))
+        //表示なら発動時間へ
+        if (m_IsActive)
         {
-            //trueならfalseにfalseならtrueに変更
-            m_IsShowingIndicators = !m_IsShowingIndicators;
-            // OFFになった瞬間、一度だけ非表示処理を行う
-            if (!m_IsShowingIndicators)
+            NowTime();
+        }
+        else
+        {
+            //クールタイムへ
+            CoolingTime();
+            // 発動していないときは隠す
+            HideAllIndicators(); 
+        }
+
+    }
+
+    /// <summary>
+    /// クールタイムの時間を計測
+    /// </summary>
+    void CoolingTime()
+    {
+        // クールタイムがまだ完了していないなら加算する
+        if (m_AbilityCoolingTime < m_LookAbilityCoolingTime)
+        {
+            m_AbilityCoolingTime += Time.deltaTime;
+        }
+        else
+        {
+            // クールタイム完了済み。キー入力を待つ
+            m_AbilityCoolingTime = m_LookAbilityCoolingTime;
+
+            if (Input.GetKeyDown(m_ShowIndicatorKey))
             {
-                HideAllIndicators();
+                Debug.Log("アビリティ発動！");
+                m_IsActive = true;
+                m_AbilityNowTime = 0f;
             }
         }
-        // キーが離されたら全ての矢印を非表示
-        if (m_IsShowingIndicators)
+    }
+
+    /// <summary>
+    /// アビリティが発動中の時間
+    /// </summary>
+    void NowTime()
+    {
+        // 時間を加算
+        m_AbilityNowTime += Time.deltaTime;
+
+        // インジケーターを更新
+        UpdateIndicators();
+
+        // 制限時間を超えたら終了
+        if (m_AbilityNowTime >= m_LookAbilityNowTime)
         {
-            UpdateIndicators();
+            Debug.Log("アビリティ終了！クールダウンに入ります。");
+
+            // 状態をリセット
+            m_AbilityNowTime = 0f;
+            m_IsActive = false;
+
+            // クールタイムを0からスタートさせる
+            m_AbilityCoolingTime = 0f;
         }
     }
 

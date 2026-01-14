@@ -1,46 +1,20 @@
 using UnityEngine;
 
 /// <summary>
-/// 敵がプレイヤーを発見した時にBattleManagerに登録するスクリプト
-/// AlertLevelの攻撃モードと連携して自動登録/解除を行う
+/// 敵をBattleManagerに登録するスクリプト
+/// 警戒レベルに関係なく常に表示される
 /// </summary>
 public class EnemyBattleRegister : MonoBehaviour
 {
-    [Header("AlertLevel参照（自動取得可）")]
-    [SerializeField] AlertLevel m_AlertLevel;
-
-    /// <summary>
-    /// 前フレームの攻撃モード状態
-    /// </summary>
-    bool m_WasAttackMode = false;
-
     /// <summary>
     /// BattleManagerに登録されているか
     /// </summary>
     bool m_IsRegistered = false;
 
-    void Update()
+    void Start()
     {
-        // AlertLevelが未設定なら自動取得
-        if (m_AlertLevel == null)
-        {
-            m_AlertLevel = GetComponent<AlertLevel>();
-        }
-
-        if (m_AlertLevel == null) return;
-
-        // 攻撃モードに入った瞬間を検知
-        if (m_AlertLevel.m_AttackMode && !m_WasAttackMode)
-        {
-            RegisterToBattle();
-        }
-        // 攻撃モードから出た瞬間を検知
-        else if (!m_AlertLevel.m_AttackMode && m_WasAttackMode)
-        {
-            UnregisterFromBattle();
-        }
-
-        m_WasAttackMode = m_AlertLevel.m_AttackMode;
+        // 開始時に即座にBattleManagerに登録
+        RegisterToBattle();
     }
 
     /// <summary>
