@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// 敵方向UI表示機能
@@ -8,8 +10,26 @@ using UnityEngine;
 /// </summary>
 public class EnemyIndicator : MonoBehaviour
 {
+    /// <summary>
+    /// インジケーターデータ（矢印UIと距離テキスト）
+    /// </summary>
+    private struct IndicatorData
+    {
+        public RectTransform ArrowRect;
+        public TextMeshProUGUI DistanceText;
+    }
+
     [Header("矢印Prefab"), SerializeField]
     GameObject m_ArrowPrefab;
+
+    [Header("アビリティの発動中のPrefab"), SerializeField]
+    GameObject m_ActivationPrefab;
+
+    [Header("クールタイムText"), SerializeField]
+    TextMeshProUGUI m_CoolingTimeText;
+
+    [Header("クールタイムのフレーム"), SerializeField]
+    Image m_CoolingTimeframe;
 
     [Header("中心基準点となる親オブジェクト"), SerializeField]
     RectTransform m_CenterScreen;
@@ -30,7 +50,7 @@ public class EnemyIndicator : MonoBehaviour
     private float m_LookAbilityNowTime = 10f;
 
     [Tooltip("敵とUIのペア辞書")]
-    Dictionary<Transform, RectTransform> m_Indicators = new Dictionary<Transform, RectTransform>();
+    Dictionary<Transform, IndicatorData> m_Indicators = new Dictionary<Transform, IndicatorData>();
 
     //タイマーを設定
     [SerializeField] private float m_AbilityNowTime;
@@ -46,14 +66,22 @@ public class EnemyIndicator : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        //最初はクールタイムは完了状態に
-        m_AbilityCoolingTime = m_LookAbilityCoolingTime;
+        //最初はクールタイム完了状態（0 = 発動可能）
+        m_AbilityCoolingTime = 0f;
 
         //初期値に設定
         m_AbilityNowTime = 0f;
 
+        //テキストに値を代入（0なら発動可能表示）
+        UpdateCoolingTimeText();
+
         //非表示
         m_IsActive = false;
+        m_ActivationPrefab.gameObject.SetActive(false);
+
+        //クールタイムフレームも非表示（最初は発動可能なので）
+        if (m_CoolingTimeframe != null)
+            m_CoolingTimeframe.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -81,16 +109,27 @@ public class EnemyIndicator : MonoBehaviour
     /// </summary>
     void CoolingTime()
     {
-        // クールタイムがまだ完了していないなら加算する
-        if (m_AbilityCoolingTime < m_LookAbilityCoolingTime)
+        // クールタイムがまだ残っているなら減算する（60→0）
+        if (m_AbilityCoolingTime > 0f)
         {
-            m_AbilityCoolingTime += Time.deltaTime;
+            m_AbilityCoolingTime -= Time.deltaTime;
+            
+            // 0以下にならないようにクランプ
+            if (m_AbilityCoolingTime < 0f)
+                m_AbilityCoolingTime = 0f;
+
+            // テキストを更新
+            UpdateCoolingTimeText();
+
+            // クールタイムが0になったらフレームを非表示
+            if (m_AbilityCoolingTime <= 0f && m_CoolingTimeframe != null)
+            {
+                m_CoolingTimeframe.gameObject.SetActive(false);
+            }
         }
         else
         {
-            // クールタイム完了済み。キー入力を待つ
-            m_AbilityCoolingTime = m_LookAbilityCoolingTime;
-
+            // クールタイム完了済み（0）。キー入力を待つ
             if (Input.GetKeyDown(m_ShowIndicatorKey))
             {
                 Debug.Log("アビリティ発動！");
@@ -108,6 +147,9 @@ public class EnemyIndicator : MonoBehaviour
         // 時間を加算
         m_AbilityNowTime += Time.deltaTime;
 
+        //表示
+        m_ActivationPrefab.gameObject.SetActive(true);
+
         // インジケーターを更新
         UpdateIndicators();
 
@@ -116,12 +158,32 @@ public class EnemyIndicator : MonoBehaviour
         {
             Debug.Log("アビリティ終了！クールダウンに入ります。");
 
+            //非表示
+            m_ActivationPrefab.gameObject.SetActive(false);
+
             // 状態をリセット
             m_AbilityNowTime = 0f;
             m_IsActive = false;
 
-            // クールタイムを0からスタートさせる
-            m_AbilityCoolingTime = 0f;
+            // クールタイムを最大値からスタートさせる（60→0へカウントダウン）
+            m_AbilityCoolingTime = m_LookAbilityCoolingTime;
+            UpdateCoolingTimeText();
+
+            // クールタイムフレームを表示
+            if (m_CoolingTimeframe != null)
+                m_CoolingTimeframe.gameObject.SetActive(true);
+        }
+    }
+
+    /// <summary>
+    /// クールタイムテキストを更新する
+    /// </summary>
+    void UpdateCoolingTimeText()
+    {
+        if (m_CoolingTimeText != null)
+        {
+            // 残り秒数を整数で表示
+            m_CoolingTimeText.text = $"{Mathf.CeilToInt(m_AbilityCoolingTime)}";
         }
     }
 
@@ -132,9 +194,9 @@ public class EnemyIndicator : MonoBehaviour
     {
         foreach (var pair in m_Indicators)
         {
-            if (pair.Value != null)
+            if (pair.Value.ArrowRect != null)
             {
-                pair.Value.gameObject.SetActive(false);
+                pair.Value.ArrowRect.gameObject.SetActive(false);
             }
         }
     }
@@ -156,7 +218,8 @@ public class EnemyIndicator : MonoBehaviour
             // 敵の座標（角度計算に使用）
             Transform enemy = pair.Key;
             // 矢印UIの座標
-            RectTransform arrow = pair.Value;
+            IndicatorData indicator = pair.Value;
+            RectTransform arrow = indicator.ArrowRect;
 
             // 敵が既に破棄されている場合はスキップ
             if (enemy == null || arrow == null) continue;
@@ -166,6 +229,9 @@ public class EnemyIndicator : MonoBehaviour
 
             // 敵が画面外にいるかどうか判定
             bool isOffScreen = screenPos.z < 0 || screenPos.x < 0 || screenPos.x > Screen.width || screenPos.y < 0 || screenPos.y > Screen.height;
+
+            // プレイヤーと敵の距離を計算（メートル単位）
+            float distance = Vector3.Distance(m_Player.position, enemy.position);
 
             // 画面外なら表示
             if (isOffScreen)
@@ -188,6 +254,14 @@ public class EnemyIndicator : MonoBehaviour
 
                 // 矢印を敵の方向に回転
                 arrow.localRotation = Quaternion.Euler(0, 0, -angle);
+
+                // 距離テキストを更新
+                if (indicator.DistanceText != null)
+                {
+                    indicator.DistanceText.text = $"{distance:F0}m";
+                    // テキストの回転をリセット（常に読みやすい向きに）
+                    indicator.DistanceText.transform.rotation = Quaternion.identity;
+                }
             }
             else
             {
@@ -211,8 +285,15 @@ public class EnemyIndicator : MonoBehaviour
                 // 生成
                 GameObject newArrow = Instantiate(m_ArrowPrefab, m_CenterScreen);
 
+                // インジケーターデータを作成
+                IndicatorData indicatorData = new IndicatorData
+                {
+                    ArrowRect = newArrow.GetComponent<RectTransform>(),
+                    DistanceText = newArrow.GetComponentInChildren<TextMeshProUGUI>()
+                };
+
                 // 敵を登録
-                m_Indicators.Add(enemy, newArrow.GetComponent<RectTransform>());
+                m_Indicators.Add(enemy, indicatorData);
             }
         }
 
@@ -232,9 +313,9 @@ public class EnemyIndicator : MonoBehaviour
         foreach (var key in toRemove)
         {
             // 削除リストにある敵のUIを破棄
-            if (m_Indicators[key] != null)
+            if (m_Indicators[key].ArrowRect != null)
             {
-                Destroy(m_Indicators[key].gameObject);
+                Destroy(m_Indicators[key].ArrowRect.gameObject);
             }
 
             // ペアリストから削除
