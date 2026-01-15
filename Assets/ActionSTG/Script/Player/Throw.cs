@@ -100,14 +100,6 @@ public class Throw : MonoBehaviour
                 }
 
             }
-            else
-            {
-                // 実行中じゃない時だけ呼ぶ
-                if (!m_ItemCount.m_IsWarningRunning)
-                {
-                    m_ItemCount.StartCoroutine(m_ItemCount.ItemCoroutine());
-                }
-            }
            
         }
         // 左クリックで投げる
