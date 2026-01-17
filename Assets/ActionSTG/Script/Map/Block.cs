@@ -12,8 +12,7 @@ public class Block : MonoBehaviour
     public GameObject m_NoImage;
     [Header("道具がある場合の画像")]
     public GameObject m_OnImage;
-    [Header("解除したいスクリプト")]
-    public MonoBehaviour[] m_Scripts;   
+
 
     //エリアに入ったかどうか
     private bool m_isArea;
@@ -24,18 +23,6 @@ public class Block : MonoBehaviour
     {
         m_NoImage.SetActive(false);
         m_OnImage.SetActive(false);
-        // 最初は全てOFFにしておく
-        if (m_Scripts != null)
-        {
-            foreach (var script in m_Scripts)
-            {
-                if (script != null) script.enabled = false;
-            }
-        }
-        else
-        {
-            Debug.Log("削除したいスクリプトが入ってません。");
-        }
     }
     private void Update()
     {
@@ -43,17 +30,6 @@ public class Block : MonoBehaviour
         {
             // クエストマネージャーに通知
             FindObjectOfType<QuestManager>().OnItemObtained(m_ItemName);
-
-            if (m_Scripts != null)
-            {
-                //削除したスクリプトを表示
-                foreach (var script in m_Scripts)
-                {
-                    if (script != null) script.enabled = true;
-                }
-            }
-            //このスクリプトは消す
-            this.enabled = false;
             Destroy(gameObject);
         }
     }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Quest5
   m_EditorClassIdentifier: 
   m_QuestName: "\u30A8\u30EC\u30D9\u30FC\u30BF\u30FC\u306E\u5C01\u9396\u3092\u58CA\u305B"
-  m_TitleImage: {fileID: 21300000, guid: 01a02ce43c856874683e009d2840a4a3, type: 3}
+  m_TitleImage: {fileID: 21300000, guid: 24a5ffb977d8eb84b9c08a99287a92ab, type: 3}
   m_DescriptionImage: {fileID: 21300000, guid: eee192442bca39f4cbea9e1334fe0339, type: 3}
   m_Item: "\u30D0\u30FC\u30EB"
   m_NextQuest: {fileID: 11400000, guid: 504f367fef8e9b84580ce68e4aa74bc2, type: 2}
