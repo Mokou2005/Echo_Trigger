@@ -89,7 +89,7 @@ public class TitleSelection : MonoBehaviour
             {
                 case 0:
                     Debug.Log("ゲーム開始へ選択");
-                    SceneManager.LoadScene("Lab");
+                    SceneManager.LoadScene("Opening");
                     break;
                 case 1:
                     Debug.Log("ゲームを終了を選択");
