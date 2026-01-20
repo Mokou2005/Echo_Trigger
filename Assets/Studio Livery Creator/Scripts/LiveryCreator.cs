@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -301,7 +303,9 @@ public class LiveryCreator : MonoBehaviour
             Debug.Log("<color=green>Livery Saved! </color>" + Application.dataPath + "/Studio Livery Creator/MyLiveries/" + fileName + ". Please find Livery Materials and Textures inside MyLiveries Folder.");
             yield return new WaitForSeconds(1);
 
+#if UNITY_EDITOR
             AssetDatabase.Refresh();
+#endif
             yield return new WaitForSeconds(1);
             ApplyToMaterial(fileName);
         }
@@ -310,11 +314,17 @@ public class LiveryCreator : MonoBehaviour
     void ApplyToMaterial(string path)
     {
         Texture2D livery;
+#if UNITY_EDITOR
         livery = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Studio Livery Creator/MyLiveries/" + path, typeof(Texture2D));
         liveryMaterial.SetTexture("_MainTex", livery);
+#else
+        livery = Resources.Load<Texture2D>("MyLiveries/" + System.IO.Path.GetFileNameWithoutExtension(path));
+        liveryMaterial.SetTexture("_MainTex", livery);
+#endif
         var _Glossiness = canvasMaterial.GetFloat("_Glossiness");
         liveryMaterial.SetFloat("_Glossiness", _Glossiness);
         var _Metallic = canvasMaterial.GetFloat("_Metallic");
         liveryMaterial.SetFloat("_Metallic", _Metallic);
     }
 }
+

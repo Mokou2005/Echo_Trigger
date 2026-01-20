@@ -10,3 +10,6 @@ UserSettings
 *.sln
 
 
+Build/Echo_Trigger_Data/resources.assets.resS
+Build/Echo_Trigger_Data/sharedassets1.assets.resS
+Build/Echo_Trigger_Data/sharedassets0.assets.resS
